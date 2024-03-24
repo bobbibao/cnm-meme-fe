@@ -3,6 +3,7 @@ import { Col} from 'react-bootstrap';
 import styled from "styled-components";
 import SideBar from "../components/chat/SideBar";
 import Tab from 'react-bootstrap/Tab';
+import SearchBar from '../components/chat/SearchBar';
 
 
 
@@ -11,6 +12,12 @@ const ChatMenu = () => (
       <SideBar />
     </ChatColStyled>
   );
+const ChatList = () => (
+<ChatColStyled>
+    <SearchBar />
+    {/* <ChatItemGroup /> */}
+</ChatColStyled>
+);
 const Chat = () => {
     return (
         <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
@@ -20,7 +27,7 @@ const Chat = () => {
                         <ChatMenu />
                     </ThirdColumn>
                     <FourthColumn>
-                        {/* <ChatList /> */}
+                        <ChatList />
                     </FourthColumn>
                 </FirstColumn>
   
