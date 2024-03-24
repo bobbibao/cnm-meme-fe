@@ -9,6 +9,7 @@ import SearchBar from '../components/chat/SearchBar';
 import ChatItem from "../components/chat/ChatItem";
 import Header from "../components/chat/Main-Header";
 import MessageList from "../components/chat/Main-MessageList";
+import InputArea from "../components/chat/Main-InputArea";
 
 
 const ChatMenu = () => (
@@ -27,7 +28,6 @@ const MessageArea = () => (
         <MessageList />
     </div>
 );
-
 const ChatItemGroup = () => {
     const renderChatItems = () => {
         return Array.from({ length: 11 }, (_, i) => <ChatItem index={i} />);
@@ -35,13 +35,13 @@ const ChatItemGroup = () => {
     return <StyledListGroup>{renderChatItems()
     }</StyledListGroup>;
   };
-  const ChatPane = ({ eventKey }) => (
+const ChatPane = ({ eventKey }) => (
   
     <Tab.Pane eventKey={eventKey} className="h-100">
         <Stack className="h-100">
             <Header />
             <MessageArea />
-            {/* <InputArea /> */}
+            <InputArea />
         </Stack>
     </Tab.Pane>
   );
