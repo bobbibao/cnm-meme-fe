@@ -1,19 +1,16 @@
 import  React  from "react";
-import { Container, Row, Col, Image } from 'react-bootstrap';
-import { ChatDotsFill, PersonLinesFill, PersonVcard, PersonVcardFill } from 'react-bootstrap-icons';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import { Image } from 'react-bootstrap';
+import { ChatDotsFill, PersonVcard } from 'react-bootstrap-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styled from "styled-components";
-import route from "../configs/route";
 
 const SideBarStyled = styled.div`
-    height: 99vh;
+    height: 100vh;
     background-color: var(--primary);
 `
 
 const ItemSidebarStyled = styled.div`
     height: calc(100%/9);
-    padding: 10px 0 0 10px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -21,7 +18,6 @@ const ItemSidebarStyled = styled.div`
 
 const ImageSidebarStyled = styled(Image)`
     width: 60%;
-    height: 60%;
 `
 
 const SideBar = () => {

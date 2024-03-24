@@ -1,37 +1,79 @@
-import  React, { useState }  from "react";
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react';
+import { Col} from 'react-bootstrap';
 import styled from "styled-components";
-import route from "../configs/route";
-import SideBar from "../components/SideBar";
+import SideBar from "../components/chat/SideBar";
+import Tab from 'react-bootstrap/Tab';
+
+
+
+const ChatMenu = () => (
+    <ChatColStyled>
+      <SideBar />
+    </ChatColStyled>
+  );
+const Chat = () => {
+    return (
+        <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
+            <Container className="w-100 m-0">
+                <FirstColumn>
+                    <ThirdColumn>
+                        <ChatMenu />
+                    </ThirdColumn>
+                    <FourthColumn>
+                        {/* <ChatList /> */}
+                    </FourthColumn>
+                </FirstColumn>
+  
+                <SecondColumn>
+                    <Tab.Content className="h-100">
+                        {/* <ChatPane eventKey="#link1" />
+                        <ChatPane eventKey="#link2" /> */}
+                    </Tab.Content>
+                </SecondColumn>
+            </Container>
+        </Tab.Container>
+    );
+  };
+
+
 
 const ChatColStyled = styled(Col)`
-    margin: 0;
-    padding: 0;
-    border-right: 1px solid black;
-`
+  margin: 0;
+  padding: 0;
+`;
 
-const Chat = () => {
-    return(
-        <Row>
-            <ChatColStyled md="3">
-                <Row>
-                    {/* Chat Menu */}
-                    <Col lg="3" xs="3">
-                    <SideBar></SideBar>
-                    </Col>
+const Container = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`;
 
-                    {/* Chat List */}
-                    <Col lg="9">
+const FirstColumn = styled.div`
+  flex: 0 0 auto;
+  min-width: 70px;
+  display: flex;
+  box-sizing: border-box;
+`;
 
-                    </Col>
-                </Row>
-            </ChatColStyled>
+const SecondColumn = styled.div`
+  flex: 1 1 auto;
+  box-sizing: border-box;
+`;
 
-            <ChatColStyled md="9">
-            </ChatColStyled>
-        </Row>
-    )
-}
+const ThirdColumn = styled.div`
+  flex: 1 1 80px;
+  max-width: 80px;
+  box-sizing: border-box;
+`;
+
+const FourthColumn = styled.div`
+  flex: 1 1 350px;
+  max-width: 350px;
+  box-sizing: border-box;
+  
+  @media (max-width: 700px) {
+    display: none;
+  }
+`;
 
 export default Chat;
