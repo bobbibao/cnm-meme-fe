@@ -45,7 +45,7 @@ const Header = () => {
 
 						<Nav.Link
 							as={LinkStyled}
-							to={route.chart}
+							to={route.chat}
 							onClick={closeNavbar}
 							>
 							Về Chúng Tôi
