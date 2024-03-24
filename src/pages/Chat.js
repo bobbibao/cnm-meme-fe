@@ -1,15 +1,49 @@
 import React from 'react';
-import { Col} from 'react-bootstrap';
+import { Col, ListGroup } from 'react-bootstrap';
 import styled from "styled-components";
-import SideBar from "../components/chat/SideBar";
 import Tab from 'react-bootstrap/Tab';
+import Stack from 'react-bootstrap/Stack';
 
+import SideBar from "../components/chat/SideBar";
+import SearchBar from '../components/chat/SearchBar';
+import ChatItem from "../components/chat/ChatItem";
+import Header from "../components/chat/Main-Header";
+import MessageList from "../components/chat/Main-MessageList";
+import InputArea from "../components/chat/Main-InputArea";
 
 
 const ChatMenu = () => (
     <ChatColStyled>
       <SideBar />
     </ChatColStyled>
+  );
+const ChatList = () => (
+<ChatColStyled>
+    <SearchBar />
+    <ChatItemGroup />
+</ChatColStyled>
+);
+const MessageArea = () => (
+    <div className="flex-grow-1 border d-flex flex-column-reverse" style={{ backgroundColor: "#F1FFFA" }}>
+        <MessageList />
+    </div>
+);
+const ChatItemGroup = () => {
+    const renderChatItems = () => {
+        return Array.from({ length: 11 }, (_, i) => <ChatItem index={i} />);
+      };
+    return <StyledListGroup>{renderChatItems()
+    }</StyledListGroup>;
+  };
+const ChatPane = ({ eventKey }) => (
+  
+    <Tab.Pane eventKey={eventKey} className="h-100">
+        <Stack className="h-100">
+            <Header />
+            <MessageArea />
+            <InputArea />
+        </Stack>
+    </Tab.Pane>
   );
 const Chat = () => {
     return (
@@ -20,14 +54,14 @@ const Chat = () => {
                         <ChatMenu />
                     </ThirdColumn>
                     <FourthColumn>
-                        {/* <ChatList /> */}
+                        <ChatList />
                     </FourthColumn>
                 </FirstColumn>
   
                 <SecondColumn>
                     <Tab.Content className="h-100">
-                        {/* <ChatPane eventKey="#link1" />
-                        <ChatPane eventKey="#link2" /> */}
+                        <ChatPane eventKey="#link1" />
+                        <ChatPane eventKey="#link2" />
                     </Tab.Content>
                 </SecondColumn>
             </Container>
@@ -75,5 +109,13 @@ const FourthColumn = styled.div`
     display: none;
   }
 `;
-
+const StyledListGroup = styled(ListGroup)`
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 0;
+  scrollbar-width: thin;
+  scrollbar-track-color: transparent;
+  scrollbar-color: #DEDEDE transparent;
+  scroll-behavior: smooth;
+`;
 export default Chat;
