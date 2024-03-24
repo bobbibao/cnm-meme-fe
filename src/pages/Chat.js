@@ -1,10 +1,10 @@
 import React from 'react';
-import { Col} from 'react-bootstrap';
+import { Col, ListGroup } from 'react-bootstrap';
 import styled from "styled-components";
-import SideBar from "../components/chat/SideBar";
 import Tab from 'react-bootstrap/Tab';
+import SideBar from "../components/chat/SideBar";
 import SearchBar from '../components/chat/SearchBar';
-
+import ChatItem from "../components/chat/ChatItem";
 
 
 const ChatMenu = () => (
@@ -15,9 +15,17 @@ const ChatMenu = () => (
 const ChatList = () => (
 <ChatColStyled>
     <SearchBar />
-    {/* <ChatItemGroup /> */}
+    <ChatItemGroup />
 </ChatColStyled>
 );
+const ChatItemGroup = () => {
+    const renderChatItems = () => {
+        return Array.from({ length: 11 }, (_, i) => <ChatItem />);
+      };
+    return <StyledListGroup>{renderChatItems()
+    }</StyledListGroup>;
+  };
+
 const Chat = () => {
     return (
         <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
@@ -82,5 +90,13 @@ const FourthColumn = styled.div`
     display: none;
   }
 `;
-
+const StyledListGroup = styled(ListGroup)`
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 0;
+  scrollbar-width: thin;
+  scrollbar-track-color: transparent;
+  scrollbar-color: #DEDEDE transparent;
+  scroll-behavior: smooth;
+`;
 export default Chat;
