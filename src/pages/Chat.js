@@ -8,6 +8,7 @@ import SideBar from "../components/chat/SideBar";
 import SearchBar from '../components/chat/SearchBar';
 import ChatItem from "../components/chat/ChatItem";
 import Header from "../components/chat/Main-Header";
+import MessageList from "../components/chat/Main-MessageList";
 
 
 const ChatMenu = () => (
@@ -21,6 +22,12 @@ const ChatList = () => (
     <ChatItemGroup />
 </ChatColStyled>
 );
+const MessageArea = () => (
+    <div className="flex-grow-1 border d-flex flex-column-reverse" style={{ backgroundColor: "#F1FFFA" }}>
+        <MessageList />
+    </div>
+);
+
 const ChatItemGroup = () => {
     const renderChatItems = () => {
         return Array.from({ length: 11 }, (_, i) => <ChatItem index={i} />);
@@ -33,8 +40,8 @@ const ChatItemGroup = () => {
     <Tab.Pane eventKey={eventKey} className="h-100">
         <Stack className="h-100">
             <Header />
-            {/* <MessageArea />
-            <InputArea /> */}
+            <MessageArea />
+            {/* <InputArea /> */}
         </Stack>
     </Tab.Pane>
   );
