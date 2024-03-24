@@ -2,9 +2,12 @@ import React from 'react';
 import { Col, ListGroup } from 'react-bootstrap';
 import styled from "styled-components";
 import Tab from 'react-bootstrap/Tab';
+import Stack from 'react-bootstrap/Stack';
+
 import SideBar from "../components/chat/SideBar";
 import SearchBar from '../components/chat/SearchBar';
 import ChatItem from "../components/chat/ChatItem";
+import Header from "../components/chat/Main-Header";
 
 
 const ChatMenu = () => (
@@ -20,12 +23,21 @@ const ChatList = () => (
 );
 const ChatItemGroup = () => {
     const renderChatItems = () => {
-        return Array.from({ length: 11 }, (_, i) => <ChatItem />);
+        return Array.from({ length: 11 }, (_, i) => <ChatItem index={i} />);
       };
     return <StyledListGroup>{renderChatItems()
     }</StyledListGroup>;
   };
-
+  const ChatPane = ({ eventKey }) => (
+  
+    <Tab.Pane eventKey={eventKey} className="h-100">
+        <Stack className="h-100">
+            <Header />
+            {/* <MessageArea />
+            <InputArea /> */}
+        </Stack>
+    </Tab.Pane>
+  );
 const Chat = () => {
     return (
         <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
@@ -41,8 +53,8 @@ const Chat = () => {
   
                 <SecondColumn>
                     <Tab.Content className="h-100">
-                        {/* <ChatPane eventKey="#link1" />
-                        <ChatPane eventKey="#link2" /> */}
+                        <ChatPane eventKey="#link1" />
+                        <ChatPane eventKey="#link2" />
                     </Tab.Content>
                 </SecondColumn>
             </Container>

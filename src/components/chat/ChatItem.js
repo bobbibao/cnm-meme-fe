@@ -16,14 +16,14 @@ const DivImage = styled.div`
 `;
 
 
-const ChatItem  = () => {
+const ChatItem  = (index) => {
   return (
     <ListGroup.Item
       as="div"
       // link={index[1]}
       className="d-flex justify-content-between align-items-start border-0 px-2 py-3"
       action
-      eventKey="link1"
+      // eventKey={index[1]}
     >
       <DivImage>
         <ImageSidebarStyled
