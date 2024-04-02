@@ -87,14 +87,7 @@ const router = createBrowserRouter([
     path: route.chat,
     element: <Chat />,
   },
-  {
-    path: route.sendOtp,
-    element: (
-      <Layout>
-        <SendOtp />
-      </Layout>
-    ),
-  },
+  
 ]);
 function App() {
 	return (

@@ -45,7 +45,7 @@ const RegisterOtpConfirm = () => {
         console.log(response);
         alert("Đăng kí tài khoản thành công");
         setTimeout(() => {
-          navigate(route.register);
+          navigate(route.home);
         }, 100);
       })
       .catch((error) => {

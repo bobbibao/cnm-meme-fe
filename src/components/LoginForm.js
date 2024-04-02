@@ -97,7 +97,7 @@ const LoginForm =() => {
 
         <Form.Group>
           Bạn chưa có tài khoản?
-          <LinkStyled href={route.sendOtp}>Đăng ký</LinkStyled>
+          <LinkStyled href={route.register}>Đăng ký</LinkStyled>
         </Form.Group>
       </FormStyled>
     );
