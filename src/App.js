@@ -16,6 +16,8 @@ import ResetPasswordConfirm from './pages/ResetPasswordConfirm';
 import NewPassword from './pages/NewPassword';
 import Register from './pages/Register';
 import Chat from './pages/Chat';
+import SendOtp from './components/SendOtp';
+import RegisterOtpConfirm from './pages/RegisterOtpConfirm';
 
 const PrivateRoute = ({ children, requiredRole }) => {
 	const { role } = useContext(AuthToken);
@@ -29,52 +31,70 @@ const PrivateRoute = ({ children, requiredRole }) => {
 	}
 };
 const router = createBrowserRouter([
-	{
-		path: route.home,
-		element: (
-			<Layout>
-				<Home />
-			</Layout>
-		)
-	},
-	{
-		path: route.resetPassword,
-		element: (
-			<Layout>
-				<ResetPassword />
-			</Layout>
-		)
-	},
-	{
-		path: route.resetPasswordConfirm,
-		element: (
-			<Layout>
-				<ResetPasswordConfirm />
-			</Layout>
-		)
-	},
-	{
-		path: route.newPassword,
-		element: (
-			<Layout>
-				<NewPassword />
-			</Layout>
-		)
-	},
-	{
-		path: route.register,
-		element: (
-			<Layout>
-				<Register/>
-			</Layout>
-		)
-	},
-	{
-		path: route.chat,
-		element: (
-			<Chat/>
-		)
-	}
+  {
+    path: route.home,
+    element: (
+      <Layout>
+        <Home />
+      </Layout>
+    ),
+  },
+  {
+    path: route.registerConfirm,
+    element: (
+      <Layout>
+        <RegisterOtpConfirm />
+      </Layout>
+    ),
+  },
+  {
+    path: route.resetPassword,
+    element: (
+      <Layout>
+        <ResetPassword />
+      </Layout>
+    ),
+  },
+  {
+    path: route.resetPasswordConfirm,
+    element: (
+      <Layout>
+        <ResetPasswordConfirm />
+      </Layout>
+    ),
+  },
+  {
+    path: route.newPassword,
+    element: (
+      <Layout>
+        <NewPassword />
+      </Layout>
+    ),
+  },
+  {
+    path: route.register,
+    element: (
+      <Layout>
+        <Register />
+      </Layout>
+    ),
+  },
+  {
+    path: route.chat,
+    element: <Chat />,
+  },
+  {
+    path: route.chat,
+    element: <Chat />,
+  },
+  {
+    path: route.sendOtp,
+    element: (
+      <Layout>
+        <SendOtp />
+      </Layout>
+    ),
+  },
 ]);
 function App() {
 	return (

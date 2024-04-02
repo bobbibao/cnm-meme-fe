@@ -3,6 +3,7 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styled from "styled-components";
 import route from "../configs/route";
+import axiosClient from "../api/axiosClient";
 
 const ContainerStyled = styled(Container)`
     display: flex;
@@ -15,16 +16,18 @@ const FormGroupStyled = styled(Form.Group)`
 `
 
 const ResetPassword =() => {
-
+    const [email, setEmail] = useState("");
     const [formData, setFormData] = useState({
         resetPasswordPhone: ''
     });
 
     const handleSubmit = (event) => {
-        event.preventDefault(); // Ngăn chặn việc tải lại trang khi submit form
-        // Xử lý dữ liệu ở đây, ví dụ: gửi dữ liệu đến server, cập nhật trạng thái, vv.
-        console.log(formData); // In dữ liệu vào console
-        // Reset form nếu cần
+        event.preventDefault(); 
+        console.log({email}); 
+        alert("Vui lòng kiểm tra email của bạn");
+        axiosClient.post(`/users/forgotPassword`, {
+          email
+        });
         setFormData({
           resetPasswordPhone: '',
         });
@@ -62,9 +65,7 @@ const ResetPassword =() => {
 
                 <FormGroupStyled>
                     <Row>
-                        <Col>
-                            <a href={route.resetPasswordConfirm} style={{textDecoration:"none"}}>Gửi lại</a>
-                        </Col>
+                       
                         <Col>
                             <Button variant="primary" type="submit">
                                     Tiếp theo
