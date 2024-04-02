@@ -53,7 +53,7 @@ const Header = () => {
 						{!user ? (
 							<Nav.Link
 							as={LinkStyled}
-							to={route.login}
+							to={route.home}
 							onClick={closeNavbar}
 							>
 								Đăng nhập

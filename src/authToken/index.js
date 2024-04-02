@@ -15,9 +15,9 @@ const AuthProvider = ({ children }) => {
 
 	const login = async (data) => {
 		const res = await authApi.login(data);
-
-		if (res.data && res.data.data.tokens) {
-			const authToken = res.data.data.tokens.access;
+		console.log(res)
+		if (res.data && res.data.tokens) {
+			const authToken = res.data.tokens;
 			const decode = decodeJwtPayload(authToken);
 
 			// Đặt token vào cookie "authToken" và thời gian sống là 7 ngày
@@ -26,6 +26,7 @@ const AuthProvider = ({ children }) => {
 			setRole(decode?.is_staff);
 		}
 	};
+	
 	const logout = () => {
 		setUser(null);
 		setRole(null);

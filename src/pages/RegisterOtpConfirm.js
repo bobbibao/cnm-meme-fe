@@ -5,7 +5,6 @@ import styled from "styled-components";
 import route from "../configs/route";
 import axiosClient from "../api/axiosClient";
 import { useNavigate } from "react-router-dom";
-
 import OtpInput from "react-otp-input";
 
 const ContainerStyled = styled(Container)`
@@ -18,39 +17,40 @@ const FormGroupStyled = styled(Form.Group)`
   text-align: center;
 `;
 
-const ResetPasswordConfirm = () => {
+const RegisterOtpConfirm = () => {
   const navigate = useNavigate();
 
   const [otp, setOtp] = useState("");
- const [registerData, setRegisterData] = useState({});
+  const [registerData, setRegisterData] = useState({});
 
- useEffect(() => {
-     // Lấy dữ liệu từ sessionStorage khi component được load
-     const jsonRegisterData = sessionStorage.getItem("registerData");
-     
-     if (jsonRegisterData) {
-         // setData(storedData);
-         setRegisterData(JSON.parse(jsonRegisterData).data);
-     }
- }, []);
+  useEffect(() => {
+    // Lấy dữ liệu từ sessionStorage khi component được load
+    const jsonRegisterData = sessionStorage.getItem("registerData");
+
+    if (jsonRegisterData) {
+      // setData(storedData);
+      setRegisterData(JSON.parse(jsonRegisterData).data);
+    }
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(registerData);
 
-    axiosClient.post(`/users/register`, {
+    axiosClient
+      .post(`/users/register`, {
         registerData,
-      otp,
-    })
-    .then(response => {
+        otp,
+      })
+      .then((response) => {
         console.log(response);
         alert("Đăng kí tài khoản thành công");
         setTimeout(() => {
-          navigate(route.register);
+          navigate(route.home);
         }, 100);
-    })
-    .catch(error => {
-        console.log(error.message);
-    })
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
   };
   return (
     <ContainerStyled fluid="md">
@@ -82,7 +82,7 @@ const ResetPasswordConfirm = () => {
 
         <FormGroupStyled>
           <p>Bạn chưa nhận được?</p>
-          <a href={route.ResetPasswordConfirm} style={{ textDecoration: "none" }}>
+          <a href={route.newPassword} style={{ textDecoration: "none" }}>
             Gửi lại
           </a>
         </FormGroupStyled>
@@ -97,4 +97,4 @@ const ResetPasswordConfirm = () => {
   );
 };
 
-export default ResetPasswordConfirm;
+export default RegisterOtpConfirm;

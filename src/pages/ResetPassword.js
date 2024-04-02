@@ -3,6 +3,7 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styled from "styled-components";
 import route from "../configs/route";
+import axiosClient from "../api/axiosClient";
 
 const ContainerStyled = styled(Container)`
     display: flex;
@@ -15,66 +16,54 @@ const FormGroupStyled = styled(Form.Group)`
 `
 
 const ResetPassword =() => {
-
-    const [formData, setFormData] = useState({
-        resetPasswordPhone: ''
-    });
+    const [email, setEmail] = useState("");
+   
 
     const handleSubmit = (event) => {
-        event.preventDefault(); // Ngăn chặn việc tải lại trang khi submit form
-        // Xử lý dữ liệu ở đây, ví dụ: gửi dữ liệu đến server, cập nhật trạng thái, vv.
-        console.log(formData); // In dữ liệu vào console
-        // Reset form nếu cần
-        setFormData({
-          resetPasswordPhone: '',
+        event.preventDefault(); 
+        console.log({email}); 
+        alert("Vui lòng kiểm tra email của bạn");
+        axiosClient.post(`/users/forgot-password`, {
+          email,
         });
+       
       };
 
-      const handleChange = (event) => {
-        const { name, value } = event.target;
-        console.log(event.target);
-        console.log(name);
-        console.log(value);
-        setFormData({
-          ...formData,
-          [name]: value,
-        });
-      };
+      
 
     return (
-        <ContainerStyled fluid="md">
-            <Form onSubmit={handleSubmit}>
-                <FormGroupStyled>
-                    <h4>Khôi phục mật khẩu Meme để kết nối với ứng dụng</h4>
-                </FormGroupStyled>
-                <FormGroupStyled>
-                    <h1 style={{color:"var(--primary)"}}>MEME</h1>
-                </FormGroupStyled>
+      <ContainerStyled fluid="md">
+        <Form onSubmit={handleSubmit}>
+          <FormGroupStyled>
+            <h4>Khôi phục mật khẩu Meme để kết nối với ứng dụng</h4>
+          </FormGroupStyled>
+          <FormGroupStyled>
+            <h1 style={{ color: "var(--primary)" }}>MEME</h1>
+          </FormGroupStyled>
 
-                <FormGroupStyled controlId="resetPasswordPhone">
-                    <Form.Control size="lg" type="text"
-                    name="resetPasswordPhone"
-                    placeholder="Nhập số điện thoại"
-                    value={formData.resetPasswordPhone}
-                    onChange={handleChange} />
+          <FormGroupStyled controlId="resetPasswordPhone">
+            <Form.Control
+              size="lg"
+              type="text"
+              name="resetPasswordPhone"
+              placeholder="Nhập email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormGroupStyled>
 
-                </FormGroupStyled>
-
-                <FormGroupStyled>
-                    <Row>
-                        <Col>
-                            <a href={route.resetPasswordConfirm} style={{textDecoration:"none"}}>Gửi lại</a>
-                        </Col>
-                        <Col>
-                            <Button variant="primary" type="submit">
-                                    Tiếp theo
-                            </Button>
-                        </Col>
-                    </Row>
-                </FormGroupStyled>
-            </Form>
-        </ContainerStyled>
-        )
+          <FormGroupStyled>
+            <Row>
+              <Col>
+                <Button variant="primary" type="submit">
+                  Tiếp theo
+                </Button>
+              </Col>
+            </Row>
+          </FormGroupStyled>
+        </Form>
+      </ContainerStyled>
+    );
 }
 
 export default ResetPassword;
