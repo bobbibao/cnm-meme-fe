@@ -2,9 +2,9 @@ const route = {
   home: "/",
   register: "/register",
   registerConfirm: "/register-confirm/",
-  resetPassword: "/reset-password/:id/:token",
+  forgotPassword: "/forgot-password",
   resetPasswordConfirm: "/reset-password-confirm/",
-  newPassword: "/new-password",
+  resetPassword: "/reset-password/:id/:token",
   chat: "/chat"
 };
 

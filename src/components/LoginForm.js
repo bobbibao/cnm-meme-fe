@@ -91,7 +91,7 @@ const LoginForm =() => {
           </Button>
           <Form.Group className="mt-3">
             Quên mật khẩu?
-            <LinkStyled href={route.resetPassword}>Đặt lại</LinkStyled>
+            <LinkStyled href={route.forgotPassword}>Đặt lại</LinkStyled>
           </Form.Group>
         </Form.Group>
 
