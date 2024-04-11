@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { ListGroup, Badge, Image} from 'react-bootstrap';
 import styled from "styled-components";
+import { Link } from 'react-router-dom';
 
 const ImageSidebarStyled = styled(Image)`
-  width: 60%;
-  height: 60%;
+  width: 50px;
+  margin: 0 15px;
 `;
 
 const DivImage = styled.div`
@@ -16,34 +17,49 @@ const DivImage = styled.div`
 `;
 
 
-const ChatItem  = (index) => {
+const ChatItem  = (item) => {
+  const [lastMessage, setLastMessage] = useState(item.data.lastMessage);
+  useEffect(() => {
+    setLastMessage(item.data.lastMessage);
+  });
+
+  // console.log("socket", socket);  
+  // const [lastMessage, setLastMessage] = useState(item.data.lastMessage);
+  // useEffect(() => {
+  //   // socket.on('message', (message) => {
+  //   //   setLastMessage(message);
+  //   // });
+  //   setLastMessage(item.data.lastMessage);
+  // }, [lastMessage]);
   return (
     <ListGroup.Item
-      as="div"
+    as={Link}
+    to={`/messages/${item.data.idChatRoom}`}
       // link={index[1]}
       className="d-flex justify-content-between align-items-start border-0 px-2 py-3"
-      action
-      // eventKey={index[1]}
-    >
+      action={true}
+      eventKey={item.data.idChatRoom}
+        >
       <DivImage>
         <ImageSidebarStyled
-          src="https://i.imgur.com/rsJjBcH.png"
+          src={item.data.photoURL} alt={`${item.data.name}`}
           roundedCircle
         />
       </DivImage>
       <div className="me-auto">
-        <div className="fw-bold">Thuỳ Dương</div>
-        <div>Cras justo odio</div>
+        <div className="fw-bold">{item.data.name}</div>
+        <div style={{fontWeight: item.data.unreadMessageCount === 0 ? '0' : '600'}}>{lastMessage.text.length > 12? lastMessage.text.substring(0, 12) + "...": lastMessage.text}</div>
         
       </div>
       <div className="d-flex flex-column">
         <span className="p-1" style={{ fontSize: '12px' }}>
-          1 giờ
+        {lastMessage.time}
         </span>
-        <div className="d-flex justify-content-center align-items-center">
-          <Badge bg="danger" pill className="p-1" style={{ fontSize: '8px' }}>
-            14
-          </Badge>
+        <div className="d-flex justify-content-end align-items-center">
+          {item.data.unreadMessageCount === 0 ? '' : <Badge bg="danger" pill  style={{ fontSize: '9px', padding: '4px 6px', margin: '5px' }}>
+            {item.data.unreadMessageCount}
+          </Badge>}
+          
         </div>
       </div>
       <style>
@@ -55,7 +71,6 @@ const ChatItem  = (index) => {
           }
         `}
       </style>
-      <input type="text" value="thuyduong" className="d-none"/>
     </ListGroup.Item>
   );
 };
