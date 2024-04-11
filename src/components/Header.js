@@ -1,8 +1,7 @@
-import React, {useState, useContext, useEffect } from "react";
+import React, {useState, useContext } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 
 import {images} from "../assets";
-import decodeJwtPayload from "../util/decodeJwt";
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { AuthToken } from '../authToken';
 import styled from "styled-components";
@@ -16,57 +15,67 @@ const Header = () => {
 	let navigate = useNavigate();
 
 	const closeNavbar = () => setExpanded(false);
+
     return (
-      <HeaderStyled
-        expand="lg"
-        className="bg-body-tertiary"
-        expanded={expanded}
-      >
-        <Container>
-          <LogoStyled href={route.home}>
+		<HeaderStyled
+		expand="lg"
+		className="bg-body-tertiary"
+		expanded={expanded}>
+    <Container>
+        <LogoStyled href={route.home}>
             <img src={images.logoMEME} alt="logo-meme" />
-            <p>Đòi tiền online</p>
-          </LogoStyled>
+            <h1>CHAT APP MEME</h1>
+        </LogoStyled>
 
-          <Navbar.Toggle
-            aria-controls="basic-navbar-nav"
-            onClick={() => setExpanded(!expanded)}
-          />
+				<Navbar.Toggle
+					aria-controls="basic-navbar-nav"
+					onClick={() => setExpanded(!expanded)}
+					/>
 
-          <NavStyled id="basic-navbar-nav">
-            <Nav>
-              <Nav.Link as={LinkStyled} to={route.home} onClick={closeNavbar}>
-                Trang chủ
-              </Nav.Link>
+				<NavStyled id="basic-navbar-nav">
+					<Nav>
+						<Nav.Link
+							as={LinkStyled}
+							to={route.home}
+							onClick={closeNavbar}>
+							Trang chủ
+						</Nav.Link>
 
-              <Nav.Link as={LinkStyled} to={route.chat} onClick={closeNavbar}>
-                Về Chúng Tôi
-              </Nav.Link>
-              {!user ? (
-                <Nav.Link as={LinkStyled} to={route.home} onClick={closeNavbar}>
-                  Đăng nhập
-                </Nav.Link>
-              ) : (
-                <NavDropdown title={user.username || "Tài khoản"} id="account">
-                  <NavDropdown.Item
-                    onClick={() => {
-                      logout();
-                      navigate(route.login);
+						<Nav.Link
+							as={LinkStyled}
+							to={route.chat}
+							onClick={closeNavbar}>
+							Về Chúng Tôi
+						</Nav.Link>
+						{!user ? (
+							<Nav.Link
+							as={LinkStyled}
+							to={route.login}
+							onClick={closeNavbar}
+							>
+								Đăng nhập
+							</Nav.Link>
+						) : (
+							<NavDropdown title="Tài khoản" id="account">
+								<NavDropdown.Item
+									onClick={() => {
+										logout();
+										navigate(route.login);
 
-                      closeNavbar();
-                    }}
-                    href={route.login}
-                    as={LinkStyled}
-                  >
-                    Đăng xuất
-                  </NavDropdown.Item>
-                </NavDropdown>
-              )}
-            </Nav>
-          </NavStyled>
-        </Container>
-      </HeaderStyled>
-    );
+										closeNavbar();
+									}}
+									href={route.login}
+									as={LinkStyled}
+									>
+									Đăng xuất
+								</NavDropdown.Item>
+							</NavDropdown>
+						)}
+					</Nav>
+				</NavStyled>
+      </Container>
+    </HeaderStyled>
+    )
 }
 
 const HeaderStyled = styled(Navbar)`
