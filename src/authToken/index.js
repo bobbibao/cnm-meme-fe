@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import Cookies from 'js-cookie';
 import authApi from '../api/authApi';
 import decodeJwtPayload from '../util/decodeJwt';
@@ -15,18 +15,18 @@ const AuthProvider = ({ children }) => {
 
 	const login = async (data) => {
 		const res = await authApi.login(data);
-		console.log(res)
-		if (res.data && res.data.tokens) {
-			const authToken = res.data.tokens;
+		console.log(res);
+		if (res.data && res.data.token) {
+			const authToken = res.data.token;
 			const decode = decodeJwtPayload(authToken);
-
 			// Đặt token vào cookie "authToken" và thời gian sống là 7 ngày
 			Cookies.set('authToken', authToken, { expires: 7 });
+			localStorage.setItem('userId', JSON.stringify(decode.id));
+			
 			setUser(authToken);
 			setRole(decode?.is_staff);
 		}
 	};
-	
 	const logout = () => {
 		setUser(null);
 		setRole(null);
