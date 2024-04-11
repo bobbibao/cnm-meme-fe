@@ -5,7 +5,6 @@ import Button from 'react-bootstrap/Button';
 import { icons } from "../../assets";
 import axiosClient from "../../api/axiosClient";
 import { useState } from 'react';
-import { set } from 'lodash';
 
 const SearchBar = () => {
   const [show, setShow] = useState(false);
