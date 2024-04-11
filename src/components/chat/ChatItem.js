@@ -48,7 +48,7 @@ const ChatItem  = (item) => {
       </DivImage>
       <div className="me-auto">
         <div className="fw-bold">{item.data.name}</div>
-        <div style={{fontWeight: item.data.unreadMessageCount === 0 ? '0' : '600'}}>{lastMessage.text.length > 12? lastMessage.text.substring(0, 12) + "...": lastMessage.text}</div>
+        <div style={{fontWeight: item.data.unreadMessageCount === 0 ? '0' : '600'}}>{lastMessage.text.length > 12? lastMessage.text.substring(0, 11) + "...": lastMessage.text}</div>
         
       </div>
       <div className="d-flex flex-column">
