@@ -1,8 +1,7 @@
 import { React } from "react";
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styled from "styled-components";
-import { icons, images } from "../assets";
+import { icons } from "../assets";
 
 const BenefitStyled = styled.div`
     font-size: 30px;

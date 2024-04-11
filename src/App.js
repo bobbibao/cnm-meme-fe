@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import {useContext} from 'react';
 import {
 	createBrowserRouter,
 	RouterProvider,
@@ -6,17 +6,19 @@ import {
 	Navigate,
 } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import Layout from './layout/Layout';
 import Home from './pages/Home';
 import route from './configs/route';
 import { AuthToken } from './authToken';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPasswordConfirm from './pages/ResetPasswordConfirm';
 import ResetPassword from './pages/ResetPassword';
+import ResetPasswordConfirm from './pages/ResetPasswordConfirm';
 import Register from './pages/Register';
 import Chat from './pages/Chat';
+import MeetingView from './pages/MeetingView';
 import RegisterOtpConfirm from './pages/RegisterOtpConfirm';
+import ForgotPassword from './pages/ForgotPassword';
+import SendOtp from './components/SendOtp'
+import ListFriendRequest from './pages/ListFriendRequest';
 
 const PrivateRoute = ({ children, requiredRole }) => {
 	const { role } = useContext(AuthToken);
@@ -30,66 +32,97 @@ const PrivateRoute = ({ children, requiredRole }) => {
 	}
 };
 const router = createBrowserRouter([
-  {
-    path: route.home,
-    element: (
-      <Layout>
-        <Home />
-      </Layout>
-    ),
-  },
-  {
-    path: route.registerConfirm,
-    element: (
-      <Layout>
-        <RegisterOtpConfirm />
-      </Layout>
-    ),
-  },
-  {
-    path: route.forgotPassword,
-    element: (
-      <Layout>
-        <ForgotPassword />
-      </Layout>
-    ),
-  },
-  {
-    path: route.resetPasswordConfirm,
-    element: (
-      <Layout>
-        <ResetPasswordConfirm />
-      </Layout>
-    ),
-  },
-  {
-    path: route.resetPassword,
-    element: (
-      <Layout>
-        <ResetPassword />
-      </Layout>
-    ),
-  },
-  {
-    path: route.register,
-    element: (
-      <Layout>
-        <Register />
-      </Layout>
-    ),
-  },
-  {
-    path: route.chat,
-    element: <Chat />,
-  },
-  {
-    path: route.forgotPassword,
-    element: <ForgotPassword />,
-  },
-  {
-    path: route.resetPassword,
-    element: <ResetPassword />,
-  },
+	{
+		path: route.home,
+		element: (
+			<Layout>
+				<Home />
+			</Layout>
+		)
+	},
+	{
+		path: route.registerConfirm,
+		element: (
+		  <Layout>
+			<RegisterOtpConfirm />
+		  </Layout>
+		),
+	},
+	{
+		path: route.forgotPassword,
+		element: (
+		  <Layout>
+			<ForgotPassword />
+		  </Layout>
+		),
+	  },
+
+	{
+		path: route.resetPasswordConfirm,
+		element: (
+			<Layout>
+				<ResetPasswordConfirm />
+			</Layout>
+		)
+	},
+	{
+		path: route.resetPassword,
+		element: (
+		  <Layout>
+			<ResetPassword />
+		  </Layout>
+		),
+	  },
+	{
+		path: route.register,
+		element: (
+			<Layout>
+				<Register/>
+			</Layout>
+		)
+	},
+	{
+		path: route.chat,
+		element: (
+			<Chat/>
+		)
+	},
+	{
+		path: route.messages,
+		element: (
+			<Chat />
+		)
+	},
+	{
+		path: route.meetingView,
+		element: (
+			<MeetingView />
+		)
+	},
+	{
+		path: route.friendRequest,
+		element: (
+			<ListFriendRequest />
+		)
+	  },
+	  {
+		path: route.forgotPassword,
+		element: <ForgotPassword />,
+	},
+	{
+		path: route.resetPassword,
+		element: <ResetPassword />,
+	},
+	{
+		path: route.sendOtp,
+		element: (
+			<Layout >
+				<div className="d-flex justify-content-center w-100">
+					<SendOtp />
+				</div>
+			</Layout>
+		),
+	},
 ]);
 function App() {
 	return (
