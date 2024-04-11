@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useState, useEffect} from "react";
 import { Col, ListGroup } from 'react-bootstrap';
 import styled from "styled-components";
 import Tab from 'react-bootstrap/Tab';
 import Stack from 'react-bootstrap/Stack';
+import axiosClient from '../api/axiosClient';
 
 import SideBar from "../components/chat/SideBar";
 import SearchBar from '../components/chat/SearchBar';
@@ -11,65 +12,94 @@ import Header from "../components/chat/Main-Header";
 import MessageList from "../components/chat/Main-MessageList";
 import InputArea from "../components/chat/Main-InputArea";
 
+import {useParams} from 'react-router-dom';
+import io from 'socket.io-client';
+const ENDPOINT = process.env.REACT_APP_API_URL;
+let socket;
+
 
 const ChatMenu = () => (
     <ChatColStyled>
       <SideBar />
     </ChatColStyled>
   );
-const ChatList = () => (
+const ChatList = (id) => (
 <ChatColStyled>
     <SearchBar />
-    <ChatItemGroup />
+    <ChatItemGroup id={id.id}/>
 </ChatColStyled>
 );
-const MessageArea = () => (
-    <div className="flex-grow-1 border d-flex flex-column-reverse" style={{ backgroundColor: "#F1FFFA" }}>
-        <MessageList />
-    </div>
+const MessageArea = ({ id }) => (
+  <div className="flex-grow-1 border d-flex flex-column-reverse" style={{ backgroundColor: "#F1FFFA" }}>
+    <MessageList id={id} socket={socket}/>
+  </div>
 );
-const ChatItemGroup = () => {
-    const renderChatItems = () => {
-        return Array.from({ length: 11 }, (_, i) => <ChatItem index={i} />);
-      };
-    return <StyledListGroup>{renderChatItems()
-    }</StyledListGroup>;
-  };
-const ChatPane = ({ eventKey }) => (
-  
-    <Tab.Pane eventKey={eventKey} className="h-100">
+const ChatItemGroup = (id) => {
+  const [chatItems, setChatItems] = useState([]);
+  const [id2, setId] = useState();
+  useEffect(() => {
+    axiosClient.get('/info-chat-item').then((res) => {
+      const data = res.data.data;
+      const chatItems = data.map((item, index) => (
+        <ChatItem key={index} data={item} socket={socket} />
+      ));
+      setChatItems(chatItems);
+    });
+    socket.on('message', (message) => {
+      setId(message);
+    });
+  }, [id, id2]);
+
+  return <StyledListGroup>{chatItems}</StyledListGroup>;
+};
+const ChatPane = ({ id}) => {
+  return (
+    <Tab.Pane eventKey={id} className="h-100">
         <Stack className="h-100">
-            <Header />
-            <MessageArea />
-            <InputArea />
+            <Header id={id} socket={socket}/>
+            <MessageArea id={id}/>
+            <InputArea id={id} socket={socket}/>
         </Stack>
     </Tab.Pane>
   );
+};
 const Chat = () => {
+  const {id} = useParams();
+  socket = io(ENDPOINT);
+  socket.on('connected', () => {
+    console.log('connected');
+  });
+    socket.emit('setup', localStorage.getItem('userId'));
+    socket.on('setup', (user) => {
+      console.log('setup', user);
+    });
+  if(id){
+    socket.emit('join chat', id, localStorage.getItem('userId'));
+    socket.on('joined chat', (room) => {
+      console.log('joined chat', room);
+    });
+  }
     return (
-        <Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
+        <Tab.Container id="list-group-tabs-example" defaultActiveKey={id}>
             <Container className="w-100 m-0">
                 <FirstColumn>
                     <ThirdColumn>
                         <ChatMenu />
                     </ThirdColumn>
                     <FourthColumn>
-                        <ChatList />
+                        <ChatList id={id}/>
                     </FourthColumn>
                 </FirstColumn>
   
                 <SecondColumn>
                     <Tab.Content className="h-100">
-                        <ChatPane eventKey="#link1" />
-                        <ChatPane eventKey="#link2" />
+                      {id? <ChatPane eventKey={id} id={id}/> : <div>We are meme</div>}
                     </Tab.Content>
                 </SecondColumn>
             </Container>
         </Tab.Container>
     );
   };
-
-
 
 const ChatColStyled = styled(Col)`
   margin: 0;
