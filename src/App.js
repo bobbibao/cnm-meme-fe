@@ -11,12 +11,11 @@ import Layout from './layout/Layout';
 import Home from './pages/Home';
 import route from './configs/route';
 import { AuthToken } from './authToken';
-import ResetPassword from './pages/ResetPassword';
+import ForgotPassword from './pages/ForgotPassword';
 import ResetPasswordConfirm from './pages/ResetPasswordConfirm';
-import NewPassword from './pages/NewPassword';
+import ResetPassword from './pages/ResetPassword';
 import Register from './pages/Register';
 import Chat from './pages/Chat';
-import SendOtp from './components/SendOtp';
 import RegisterOtpConfirm from './pages/RegisterOtpConfirm';
 
 const PrivateRoute = ({ children, requiredRole }) => {
@@ -48,10 +47,10 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: route.resetPassword,
+    path: route.forgotPassword,
     element: (
       <Layout>
-        <ResetPassword />
+        <ForgotPassword />
       </Layout>
     ),
   },
@@ -64,10 +63,10 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: route.newPassword,
+    path: route.resetPassword,
     element: (
       <Layout>
-        <NewPassword />
+        <ResetPassword />
       </Layout>
     ),
   },
@@ -84,10 +83,13 @@ const router = createBrowserRouter([
     element: <Chat />,
   },
   {
-    path: route.chat,
-    element: <Chat />,
+    path: route.forgotPassword,
+    element: <ForgotPassword />,
   },
-  
+  {
+    path: route.resetPassword,
+    element: <ResetPassword />,
+  },
 ]);
 function App() {
 	return (
