@@ -5,6 +5,7 @@ import styled from "styled-components";
 import route from "../configs/route";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import validator from "validator";
 
 const ContainerStyled = styled(Container)`
   display: flex;
@@ -19,55 +20,57 @@ const FormGroupStyled = styled(Form.Group)`
 const ResetPassword = () => {
   const navigate = useNavigate();
   const { id, token } = useParams();
-  const [password, setPassword] = useState();
-  // axios.defaults.withCredentials = true;
-
-  const handleSubmit = (e) => {
+  const [errorMessage, setErrorMessage] = useState(""); // Thêm state để lưu lỗi
+const [password, setPassword] = useState("");
+const [passwordError, setPasswordError] = useState("");
+  const handleSubmit = async (e) => {
+    // Chuyển thành hàm async
     e.preventDefault();
-    console.log({ token, password });
-    alert("Đổi mật khẩu thành công");
-    axios
-      .post(`http://localhost:3000/api/users/reset-password/${id}/${token}`, {
-        password,
-      })
-      .then((res) => {
-        if (res.data.Status === "Success") {
-          navigate(route.home);
+     if (!validator.isStrongPassword(password)) {
+       setPasswordError("Mật khẩu phải mạnh");
+       return;
+     }
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/users/reset-password/${id}/${token}`,
+        {
+          password,
         }
-      })
-      .catch((err) => console.log(err));
+      );
+      alert("Đổi mật khẩu thành công");
+      navigate(route.home);
+    } catch (error) {
+      // Xử lý lỗi từ BE
+      if (error.response && error.response.data && error.response.data.Status) {
+        setErrorMessage(error.response.data.Status);
+      } else {
+        setErrorMessage("Có lỗi xảy ra, vui lòng thử lại sau");
+      }
+    }
   };
 
   return (
     <ContainerStyled fluid="md">
       <Form onSubmit={handleSubmit} style={{ width: "40%" }}>
+        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}{" "}
+        {/* Hiển thị lỗi */}
         <FormGroupStyled>
           <h3>Đặt lại mật khẩu</h3>
         </FormGroupStyled>
-
         <FormGroupStyled>
           <Form.Control
-          autoComplete="off"
             size="lg"
             type="password"
             name="password"
             placeholder="Nhập mật khẩu mới"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            isInvalid={!!passwordError}
           />
+          <Form.Control.Feedback type="invalid">
+            {passwordError}
+          </Form.Control.Feedback>
         </FormGroupStyled>
-
-        {/* <FormGroupStyled>
-          <Form.Control
-            size="lg"
-            type="text"
-            name="newPasswordConfirm"
-            placeholder="Nhập lại mật khẩu mới"
-            // value={formData.resetPasswordPhone}
-            // onChange={handleChange}
-          />
-        </FormGroupStyled> */}
-
         <FormGroupStyled>
           <Button variant="primary" type="submit">
             Xác nhận
