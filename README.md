@@ -1,12 +1,12 @@
 # MeMe_ChatApp_FrontEnd
 
 ## Author
-- [Nguyễn Huỳnh Anh Thắng (Mentor)]()
+- [Kiều Thị Thuỳ Dương]()
 - [Trần Văn Bảo]()
 - [Lê Trần Tú Uyên]()
-- [Kiều Thị Thuỳ Dương]()
 - [Ngô Thiên Bâng]()
 - [Lê Hoàng Bảo (Leader)]()
+- [Nguyễn Huỳnh Anh Thắng (Mentor)]()
 
 ## Description
 - MeMe ChatApp FrontEnd is a client application developed using ReactJS, Bootstrap, and other technologies. It provides a user-friendly interface for chatting with other users.
