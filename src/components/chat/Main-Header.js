@@ -52,16 +52,17 @@ const Header = (id) => {
     const [show, setShow] = useState(false);
     const [userInfo, setUserInfo] = useState({});
 
-    const handleModal = async () => { 
+    const handleModal = async () => {
         const res = await axiosClient.get("/profile/" + user.username);
         setUserInfo(res.data.data);
         console.log("userInfo", userInfo);
         setShow(true);
     }
     const handleClose = () => setShow(false);
-    
+
     const handleBt = () => {
     };
+
     return (
         <><div className="p-2 border-start">
             <Stack direction="horizontal" gap={2}>
@@ -75,7 +76,7 @@ const Header = (id) => {
                             <ImageSidebarStyled
                                 src={user.photoURL}
                                 roundedCircle
-                                onClick={handleModal} 
+                                onClick={handleModal}
                                 style={{ cursor: 'pointer' }}
                                 />
                         </DivImage>
@@ -90,11 +91,11 @@ const Header = (id) => {
                         src={icons.addGroup}
                         style={{ width: '25px', height: '25px' }} />
                 </div>
-                <div className="p-1 mx-1 image-hover">
+                {/* <div className="p-1 mx-1 image-hover">
                     <Image
                         src={icons.search}
                         style={{ width: '25px', height: '25px' }} />
-                </div>
+                </div> */}
                 <div className="p-1 mx-1 image-hover" onClick={handleCamera}>
                     <Image
                         src={icons.video_call}
