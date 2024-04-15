@@ -42,7 +42,7 @@ const ChatItem  = (item) => {
         >
       <DivImage>
         <ImageSidebarStyled
-          src={item.data.photoURL} alt={`${item.data.name}`}
+          src={item.data.photoURL? item.data.photoURL: "https://i.imgur.com/rsJjBcH.png"} alt={`${item.data.name}`}
           roundedCircle
         />
       </DivImage>
