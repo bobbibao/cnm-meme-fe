@@ -79,21 +79,21 @@ const SearchBar = () => {
   }
 
   const handleSubmitGroup = async (event) => {
-    if(media.length > 0) {
-      event.preventDefault()
+    event.preventDefault()
+    if(event.target.media.length > 0) {
       const formData = new FormData();
       // files.forEach((file) => {
       //     formData.append('media', media);
       // });
       formData.append('name', groupName);
-      formData.append('groupAvatar', media);
+      formData.append('groupAvatar', event.target.media);
       // const res = await axiosClient.post(process.env.REACT_APP_API_URL+'/api/send-media', formData, {
       //     headers: {
       //         'Content-Type': 'multipart/form-data',
       //         'Authorization': Cookies.get('authToken')
       //     }
       // });
-      console.log(formData.get('name'));
+      console.log(formData.get('groupAvatar'));
     }
   }
 
