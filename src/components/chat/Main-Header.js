@@ -64,9 +64,6 @@ const Header = (id) => {
 
     const handleBt = () => {
     };
-<<<<<<< main
-
-=======
     if(!meetingId){
         socket.emit('call', id.id);
         socket.on('call', (meetingId) => {
@@ -74,7 +71,6 @@ const Header = (id) => {
             setMeetingId(meetingId);
         });
     }
->>>>>>> main
     return (
         <><div className="p-2 border-start">
             <Stack direction="horizontal" gap={2}>
