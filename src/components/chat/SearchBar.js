@@ -1,18 +1,28 @@
 import Stack from 'react-bootstrap/Stack';
-import { Image, Container, Row, Col, Card, Form  } from 'react-bootstrap';
+import { Image, Container, Row, Col, Card, Form, FormControl, ListGroup, ListGroupItem  } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { icons } from "../../assets";
+import Cookies from 'js-cookie';
 import axiosClient from "../../api/axiosClient";
-import { useState } from 'react';
+import styled from 'styled-components';
+import { useState, useRef, useEffect } from 'react';
+import FriendItem from './FriendItem';
 
 const SearchBar = () => {
   const [show, setShow] = useState(false);
+  const [showGroup, setShowGroup] = useState(false)
+  const [previewAvatarGroup, setPreviewAvatarGroup] = useState()
+  const [searchResults, setSearchResults] = useState({});
+  const [checkedUserId, setCheckedUserId] = useState([]);
+  const [groupName, setGroupName] = useState('')
+
   const [userInfo, setUserInfo] = useState({}); // eslint-disable-line no-unused-vars
   const [sent, setSent] = useState(false); // eslint-disable-line no-unused-vars
   const [isFriend, setIsFriend] = useState(false); // eslint-disable-line no-unused-vars
-  const handleClose = () => {setShow(false);};
-  
+  const fileInputRef = useRef();
+  const handleClose = () => {setShow(false)};
+
   const handleSearch = async (event) => {
     const searchTerm = event.target.value;
     if(searchTerm.length === 10){
@@ -43,6 +53,78 @@ const SearchBar = () => {
       setSent(true);
     }
   }
+
+  const handleAddGroupModal = () => {
+    setShowGroup(true)
+  }
+
+  const handleCloseGroupModal = () => setShowGroup(false)
+
+  const triggerFileSelectPopup = () => fileInputRef.current.click();
+
+  const handleAvatarChange = (event) => {
+
+    console.log(event.target.files);
+
+    if (event.target.files && event.target.files.length > 0) {
+        const newFiles = event.target.files[0];
+        // console.log(newFiles);
+        setPreviewAvatarGroup(newFiles)
+    }
+  };
+
+  const handleChangeGroupName = (event) => {
+    setGroupName(event.target.value)
+    console.log(groupName);
+  }
+
+  const handleSubmitGroup = async (event) => {
+    if(media.length > 0) {
+      event.preventDefault()
+      const formData = new FormData();
+      // files.forEach((file) => {
+      //     formData.append('media', media);
+      // });
+      formData.append('name', groupName);
+      formData.append('groupAvatar', media);
+      // const res = await axiosClient.post(process.env.REACT_APP_API_URL+'/api/send-media', formData, {
+      //     headers: {
+      //         'Content-Type': 'multipart/form-data',
+      //         'Authorization': Cookies.get('authToken')
+      //     }
+      // });
+      console.log(formData.get('name'));
+    }
+  }
+
+  const handleFriendItemCheck = (userId, isChecked) => {
+    if (isChecked) {
+      setCheckedUserId((prevUserIds) => [...prevUserIds, userId]);
+    } else {
+      setCheckedUserId((prevUserIds) =>
+        prevUserIds.filter((item) => item !== userId)
+      );
+    }
+  };
+
+  const dataFriendFake = [
+    {
+      userId: 1,
+      userName: "Tú Uyên",
+      avatar: "https://i.imgur.com/rsJjBcH.png"
+    },
+    {
+      userId: 2,
+      userName: "Tú Uyên",
+      avatar: "https://i.imgur.com/rsJjBcH.png"
+    },
+    {
+      userId: 3,
+      userName: "Tú Uyên",
+      avatar: "https://i.imgur.com/rsJjBcH.png"
+    }
+  ]
+
   return (
     <><Stack direction="horizontal" gap={1} className="p-3">
       <div>
@@ -56,7 +138,7 @@ const SearchBar = () => {
           src={icons.addFriend}
           style={{ width: '22px', height: '22px' }} />
       </div>
-      <div className="p-1">
+      <div className="p-1"  onClick={handleAddGroupModal}>
         <Image
           src={icons.addGroup}
           style={{ width: '25px', height: '25px' }} />
@@ -97,8 +179,8 @@ const SearchBar = () => {
                     </Col>
                     <Col sm="6" className="mb-3">
                       <h6>Phone</h6>
-                      <p className="text-muted">{userInfo.phone}</p>  
-                     
+                      <p className="text-muted">{userInfo.phone}</p>
+
                     </Col>
                   </Row>
 
@@ -112,7 +194,7 @@ const SearchBar = () => {
                       <h6>Gender</h6>
                       <p className="text-muted">{userInfo.gender}</p>
                     </Col>
-                    
+
                   </Row>
 
                   <div className="d-flex justify-content-start">
@@ -126,16 +208,91 @@ const SearchBar = () => {
           </Card>
         </Col>
       </Row>
-                </Container>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
-                </Button>
-            </Modal.Footer>
-        </Modal>
-        </>
+    </Container>
+  </Modal.Body>
+    <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+            Close
+        </Button>
+    </Modal.Footer>
+</Modal>
+{/*  Model add group */}
+<Modal show={showGroup} onHide={handleCloseGroupModal}>
+    <Form onSubmit={handleSubmitGroup} encType="multipart/form-data">
+      <Modal.Header closeButton>
+          <Modal.Title>Tạo nhóm mới</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Container fluid>
+            <Row className="justify-content-center align-items-center h-100 w-100 d-flex mb-3">
+                <Col lg="2" className="mb-4 mb-lg-0">
+                    <Image className="mx-2"
+                    // src={icons.image}
+                    src= {previewAvatarGroup && URL.createObjectURL(previewAvatarGroup) || icons.image }
+                     style={{ width: '40px', height: '40px' }} onClick={triggerFileSelectPopup} />
+
+                    <input type="file" name="media" id="media" accept="image/*"
+                    ref={fileInputRef} style={{ display: 'none' }}
+                    onChange={handleAvatarChange}
+                    />
+                </Col>
+                <Col lg="10">
+                    <Form.Control className="flex-grow-1 border-0 fw-bold "
+                    name='groupName'
+                    onChange={handleChangeGroupName}
+                    placeholder="Nhập tên nhóm"
+                    style={{fontSize:"17px"}}/>
+                </Col>
+            </Row>
+            <Row className='mb-3'>
+              <FormControl type='text' placeholder="Nhập số điện thoại thành viên" onChange={handleSearch}/>
+            </Row>
+            <Row>
+              <Col lg='12'>
+                <StyledListGroup>
+                  {/* Đổ api get all friend vào đây  */}
+                  {dataFriendFake.map((friend, index)=>
+                    <FriendItem friend={friend} key={friend.userId} index={index} onCheck={handleFriendItemCheck}/>
+                  )}
+
+
+                </StyledListGroup>
+              </Col>
+              {/* Tạm tắt feature này để update sau  */}
+              {/* <Col lg='4'>
+                Đây sẽ chứa các user đã được chọn để tạo nhóm
+                <StyledListGroup>
+                  <StyledListGroupItem
+                      className="d-flex justify-content-between align-items-start border-0 px-2 py-3"
+                        action
+                        onClick={console.log(123)}
+                      >
+                        a</StyledListGroupItem>
+                </StyledListGroup>
+              </Col> */}
+            </Row>
+        </Container>
+    </Modal.Body>
+    <Modal.Footer>
+        <Button variant="primary" type="submit">
+            Tạo nhóm
+        </Button>
+    </Modal.Footer>
+    </Form>
+  </Modal>
+
+</>
   );
 };
+const StyledListGroup = styled(ListGroup)`
+max-height: 60vh;
+overflow-y: auto;
+border-radius: 0;
+scrollbar-width: thin;
+scrollbar-track-color: transparent;
+scrollbar-color: #DEDEDE transparent;
+scroll-behavior: smooth;
+`;
+
 
 export default SearchBar;
