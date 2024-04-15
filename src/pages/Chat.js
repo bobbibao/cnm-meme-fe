@@ -79,6 +79,19 @@ const Chat = () => {
       console.log('joined chat', room);
     });
   }
+  useEffect(() => {
+    const handleNotify = (data) => {
+        console.log('notify', data);
+        if(window.confirm('Are you sure you want to join this room?'))
+            window.open('/meeting/' + data.meetingId, '_blank');
+    };
+
+    socket.on("notify", handleNotify);
+
+    // Clean up the effect
+    return () => socket.off("notify", handleNotify);
+
+  }, []); // Empty dependency array means this effect runs once on mount and clean up on unmount
     return (
         <Tab.Container id="list-group-tabs-example" defaultActiveKey={id}>
             <Container className="w-100 m-0">

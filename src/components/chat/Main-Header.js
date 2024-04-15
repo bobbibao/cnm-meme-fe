@@ -37,17 +37,19 @@ const Header = (id) => {
         const days = Math.floor(hours / 24);
         return days + ' days ago';
     }
+    
     const handleCamera = () => {
         if (meetingId) {
-            navigate('/meeting/' + meetingId);
+            socket.emit('notify', { meetingId: meetingId, userId: user._id});
+            window.open('/meeting/' + meetingId, '_blank');
             return;
         }
-        socket.emit('call', { chatRoomId: id.id });
-        socket.on('call', (meetingId) => {
-            console.log('data', meetingId);
-            setMeetingId(meetingId);
-            navigate('/meeting/' + meetingId);
-        });
+        // socket.emit('call', { chatRoomId: id.id });
+        // socket.on('call', (meetingId) => {
+        //     console.log('data', meetingId);
+        //     setMeetingId(meetingId);
+        //     window.open('/meeting/' + meetingId, '_blank');
+        // });
     };
     const [show, setShow] = useState(false);
     const [userInfo, setUserInfo] = useState({});
@@ -62,6 +64,13 @@ const Header = (id) => {
     
     const handleBt = () => {
     };
+    if(!meetingId){
+        socket.emit('call', id.id);
+        socket.on('call', (meetingId) => {
+            console.log('data', meetingId);
+            setMeetingId(meetingId);
+        });
+    }
     return (
         <><div className="p-2 border-start">
             <Stack direction="horizontal" gap={2}>
