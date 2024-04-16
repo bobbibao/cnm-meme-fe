@@ -24,7 +24,6 @@ const SearchBar = () => {
   const [show, setShow] = useState(false);
   const [showGroup, setShowGroup] = useState(false);
   const [previewAvatarGroup, setPreviewAvatarGroup] = useState();
-  const [searchResults, setSearchResults] = useState({});
   const [checkedUserId, setCheckedUserId] = useState([]);
   const [groupName, setGroupName] = useState("");
 
@@ -77,28 +76,29 @@ const SearchBar = () => {
 
   const handleAvatarChange = (event) => {
     console.log(event.target.files);
-  
+
     if (event.target.files && event.target.files.length > 0) {
       const newFile = event.target.files[0];
       setPreviewAvatarGroup(newFile); // Set the selected file to state
     }
   };
-  
+
   const handleChangeGroupName = (event) => {
     setGroupName(event.target.value);
   };
-  
+
   const handleSubmitGroup = async (event) => {
     event.preventDefault();
     const data= new FormData();
-    checkedUserId.map((id) => {
-      data.append("members",id);
-    });
-   
+    console.log(checkedUserId);
+    data.append("members", JSON.stringify(checkedUserId))
+    // checkedUserId.map((id) => {
+    //   data.append("members",id);
+    // });
+
       data.append("name",groupName);
       //data.append("members",memberDatas);
       data.append("photo",previewAvatarGroup);
-      console.log("nameeeeee",groupName);
     // const data = {
     //   name: groupName,
     //   members: memberDatas,
@@ -117,15 +117,17 @@ const SearchBar = () => {
           },
         }
       );
-  
+
       console.log("Group created successfully:", response.data);
+      setCheckedUserId([])
       setShowGroup(false); // Assuming setState function for showing group modal/dialog
     } catch (error) {
-      console.error("Error creating group:", error);
+      alert(error.response.data.error);
+      setCheckedUserId([])
       setShowGroup(false); // Assuming setState function for showing group modal/dialog
     }
   };
-  
+
   const handleFriendItemCheck = (_id, isChecked) => {
     setCheckedUserId((prevUserIds) => {
       if (isChecked) {
@@ -135,7 +137,7 @@ const SearchBar = () => {
       }
     });
   };
-  
+
 
   // const dataFriendFake = [
   //   {

@@ -13,7 +13,6 @@ const FriendItem =({friend, index, onCheck}) => {
     return (
       <StyledListGroupItem
         key={index}
-        action
         onClick={handleItemClick}
         className="d-flex justify-content-between align-items-start border-0 "
       >
