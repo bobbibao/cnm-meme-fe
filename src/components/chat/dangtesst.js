@@ -18,7 +18,6 @@ import axiosClient from "../../api/axiosClient";
 import styled from "styled-components";
 import { useState, useRef, useEffect } from "react";
 import FriendItem from "./FriendItem";
-import axios from "axios";
 
 const SearchBar = () => {
   const [show, setShow] = useState(false);
@@ -77,104 +76,66 @@ const SearchBar = () => {
 
   const handleAvatarChange = (event) => {
     console.log(event.target.files);
-  
+
     if (event.target.files && event.target.files.length > 0) {
-      const newFile = event.target.files[0];
-      setPreviewAvatarGroup(newFile); // Set the selected file to state
+      const newFiles = event.target.files[0];
+      // console.log(newFiles);
+      setPreviewAvatarGroup(newFiles);
     }
   };
-  
+
   const handleChangeGroupName = (event) => {
     setGroupName(event.target.value);
+    console.log(groupName);
   };
-  
+
   const handleSubmitGroup = async (event) => {
     event.preventDefault();
-    const data= new FormData();
-    checkedUserId.map((id) => {
-      data.append("members",id);
-    });
-   
-      data.append("name",groupName);
-      //data.append("members",memberDatas);
-      data.append("photo",previewAvatarGroup);
-      console.log("nameeeeee",groupName);
-    // const data = {
-    //   name: groupName,
-    //   members: memberDatas,
-    //   photo:previewAvatarGroup
-    // };
-   console.log(data);
-   console.log(previewAvatarGroup);
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/creategroup`,
-        data, // Send the FormData object instead of the data object
-        {
-          headers: {
-           'Content-Type': 'multipart/form-data',
-              'Authorization':  Cookies.get('authToken'),
-          },
-        }
-      );
-  
-      console.log("Group created successfully:", response.data);
-      setShowGroup(false); // Assuming setState function for showing group modal/dialog
-    } catch (error) {
-      console.error("Error creating group:", error);
-      setShowGroup(false); // Assuming setState function for showing group modal/dialog
-    }
-  };
-  
-  const handleFriendItemCheck = (_id, isChecked) => {
-    setCheckedUserId((prevUserIds) => {
-      if (isChecked) {
-        return [...prevUserIds, _id];
-      } else {
-        return prevUserIds.filter((id) => id !== _id);
-      }
-    });
-  };
-  
-
-  // const dataFriendFake = [
-  //   {
-  //     userId: 1,
-  //     userName: "Tú Uyên",
-  //     avatar: "https://i.imgur.com/rsJjBcH.png",
-  //   },
-  //   {
-  //     userId: 2,
-  //     userName: "Tú Uyên",
-  //     avatar: "https://i.imgur.com/rsJjBcH.png",
-  //   },
-  //   {
-  //     userId: 3,
-  //     userName: "Tú Uyên",
-  //     avatar: "https://i.imgur.com/rsJjBcH.png",
-  //   },
-  // ];
-  const handleFetchFriends = async () => {
-    try {
-      const response = await axiosClient.get(
-        "http://localhost:3000/api/getAllFriend"
-      );
-      if (response.status === 200) {
-        // Check if response.data is an array before setting state
-        if (Array.isArray(response.data)) {
-          setIsFriend(response.data);
-        } else {
-          console.error("Error: Response data is not an array");
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching friends:", error);
+    if (event.target.media.length > 0) {
+      const formData = new FormData();
+      // files.forEach((file) => {
+      //     formData.append('media', media);
+      // });
+      formData.append("name", groupName);
+      formData.append("groupAvatar", event.target.media);
+      // const res = await axiosClient.post(process.env.REACT_APP_API_URL+'/api/send-media', formData, {
+      //     headers: {
+      //         'Content-Type': 'multipart/form-data',
+      //         'Authorization': Cookies.get('authToken')
+      //     }
+      // });
+      console.log(formData.get("groupAvatar"));
     }
   };
 
-  useEffect(() => {
-    handleFetchFriends();
-  }, []);
+  const handleFriendItemCheck = (userId, isChecked) => {
+    if (isChecked) {
+      setCheckedUserId((prevUserIds) => [...prevUserIds, userId]);
+    } else {
+      setCheckedUserId((prevUserIds) =>
+        prevUserIds.filter((item) => item !== userId)
+      );
+    }
+  };
+
+  const dataFriendFake = [
+    {
+      userId: 1,
+      userName: "Tú Uyên",
+      avatar: "https://i.imgur.com/rsJjBcH.png",
+    },
+    {
+      userId: 2,
+      userName: "Tú Uyên",
+      avatar: "https://i.imgur.com/rsJjBcH.png",
+    },
+    {
+      userId: 3,
+      userName: "Tú Uyên",
+      avatar: "https://i.imgur.com/rsJjBcH.png",
+    },
+  ];
+
   return (
     <>
       <Stack direction="horizontal" gap={1} className="p-3">
@@ -349,36 +310,35 @@ const SearchBar = () => {
               <Row>
                 <Col lg="12">
                   <StyledListGroup>
-                    {/* Mapping through isFriend array if it's an array */}
-                    {Array.isArray(isFriend) &&
-                      isFriend.map((friend, index) => (
-                        <FriendItem
-                          friend={friend}
-                          key={friend.username}
-                          onCheck={(userId, isChecked) =>
-                            handleFriendItemCheck(userId, isChecked)
-                          }
-                        />
-                      ))}
+                    {/* Đổ api get all friend vào đây  */}
+                    {dataFriendFake.map((friend, index) => (
+                      <FriendItem
+                        friend={friend}
+                        key={friend.userId}
+                        index={index}
+                        onCheck={handleFriendItemCheck}
+                      />
+                    ))}
+                   
                   </StyledListGroup>
                 </Col>
                 {/* Tạm tắt feature này để update sau  */}
                 {/* <Col lg='4'>
-                  Đây sẽ chứa các user đã được chọn để tạo nhóm
-                  <StyledListGroup>
-                    <StyledListGroupItem
-                        className="d-flex justify-content-between align-items-start border-0 px-2 py-3"
-                          action
-                          onClick={console.log(123)}
-                        >
-                          a</StyledListGroupItem>
-                  </StyledListGroup>
-                </Col> */}
+                Đây sẽ chứa các user đã được chọn để tạo nhóm
+                <StyledListGroup>
+                  <StyledListGroupItem
+                      className="d-flex justify-content-between align-items-start border-0 px-2 py-3"
+                        action
+                        onClick={console.log(123)}
+                      >
+                        a</StyledListGroupItem>
+                </StyledListGroup>
+              </Col> */}
               </Row>
             </Container>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={handleSubmitGroup} variant="primary" type="submit">
+            <Button variant="primary" type="submit">
               Tạo nhóm
             </Button>
           </Modal.Footer>
