@@ -22,7 +22,7 @@ const AuthProvider = ({ children }) => {
 			// Đặt token vào cookie "authToken" và thời gian sống là 7 ngày
 			Cookies.set('authToken', authToken, { expires: 7 });
 			localStorage.setItem('userId', JSON.stringify(decode.id));
-			
+
 			setUser(authToken);
 			setRole(decode?.is_staff);
 		}
