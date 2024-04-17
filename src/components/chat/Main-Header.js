@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
+// id: props
 const Header = (id) => {
     const [user, setUser] = useState({});
     const [meetingId, setMeetingId] = useState();
@@ -37,7 +38,7 @@ const Header = (id) => {
         const days = Math.floor(hours / 24);
         return days + ' days ago';
     }
-    
+
     const handleCamera = () => {
         if (meetingId) {
             socket.emit('notify', { meetingId: meetingId, userId: user._id});

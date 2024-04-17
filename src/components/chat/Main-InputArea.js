@@ -34,9 +34,9 @@ const InputArea = (chatRoomId) => {
             });
             console.log(res);
             if(res.status === 200) {
-                setMessage('');
                 setPreviews([]);
                 setFiles([]);
+                setMessage('');
                 res.data.data.forEach((mediaData) => {
                     const data = {
                         chatRoomId: chatRoomId.id,
@@ -74,7 +74,7 @@ const InputArea = (chatRoomId) => {
                 //accept="image/*, video/*, .pdf, .doc, .docx"
                 const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'video/mp4'];
                 if (true) {
-                    if(file.size > 1024*1024*10) { 
+                    if(file.size > 1024*1024*10) {
                         alert('File size should not exceed 10MB.');
                         return;
                     }
@@ -97,7 +97,7 @@ const InputArea = (chatRoomId) => {
         <div className="">
             <Stack direction="horizontal" gap={3} className="pe-2 border">
                 <Form onSubmit={handleSubmit} className="w-100 d-flex border-0 justify-content-evenly align-items-center position-relative" encType="multipart/form-data">
-                    <InputEmoji 
+                    <InputEmoji
                         value={message}
                         onChange={setMessage}
                         placeholder="Nhập tin nhắn..."
