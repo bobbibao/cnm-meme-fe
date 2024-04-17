@@ -64,13 +64,15 @@ const Header = (id) => {
     
     const handleBt = () => {
     };
+    useEffect(() => {
     if(!meetingId){
+        setMeetingId("meetingId");
         socket.emit('call', id.id);
         socket.on('call', (meetingId) => {
-            console.log('data', meetingId);
+            console.log('MeetingHeader', meetingId);
             setMeetingId(meetingId);
         });
-    }
+    }}, []);
     return (
         <><div className="p-2 border-start">
             <Stack direction="horizontal" gap={2}>

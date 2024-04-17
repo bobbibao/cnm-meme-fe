@@ -205,14 +205,10 @@ function Container(props) {
     },
   });
   
-  socket.on("accept meeting", (data) => {
+  useEffect(() =>{
     setJoined("JOINING");
     join();
-  });
-  socket.on("decline", (data) => {
-    window.confirm("The user declined the meeting");
-    window.close();
-  });
+  }, []);
   return (
     <div style={{backgroundColor: '#1e2329', padding: ''}}>
       {/* <h3>Meeting Id: {props.meetingId}</h3> */}

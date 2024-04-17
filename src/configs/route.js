@@ -9,6 +9,7 @@ const route = {
 	chat:'/chat',
 	messages:'/messages/:id',
 	meetingView:'/meeting/:meetingId',
+	meetingView2:'/meeting2/:meetingId',
 	callList: "/call-list",
 	friendRequest: "/friend-request",
 };

@@ -37,7 +37,7 @@ const SearchBar = () => {
     }
   };
   const handleAddFriend = async () => {
-    const res = await axiosClient.post("/add-friend", {userInfo});
+    const res = await axiosClient.post("/add-friend", {friendId: userInfo._id});
     if(res.status === 200){
       console.log("Add friend success");
       setSent(true);

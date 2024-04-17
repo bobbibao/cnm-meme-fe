@@ -15,6 +15,7 @@ import ResetPasswordConfirm from './pages/ResetPasswordConfirm';
 import Register from './pages/Register';
 import Chat from './pages/Chat';
 import MeetingView from './pages/MeetingView';
+import MeetingView2 from './pages/MeetingView2';
 import RegisterOtpConfirm from './pages/RegisterOtpConfirm';
 import ForgotPassword from './pages/ForgotPassword';
 import SendOtp from './components/SendOtp'
@@ -97,6 +98,11 @@ const router = createBrowserRouter([
 		path: route.meetingView,
 		element: (
 			<MeetingView />
+		)
+	},{
+		path: route.meetingView2,
+		element: (
+			<MeetingView2 />
 		)
 	},
 	{
