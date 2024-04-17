@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, createContext} from "react";
 import { Col, ListGroup } from 'react-bootstrap';
 import styled from "styled-components";
 import Tab from 'react-bootstrap/Tab';
@@ -11,12 +11,11 @@ import ChatItem from "../components/chat/ChatItem";
 import Header from "../components/chat/Main-Header";
 import MessageList from "../components/chat/Main-MessageList";
 import InputArea from "../components/chat/Main-InputArea";
-
+import ConfirmDialog from "../components/chat/DialogMeeting";
 import {useParams} from 'react-router-dom';
 import io from 'socket.io-client';
 const ENDPOINT = process.env.REACT_APP_API_URL;
 let socket;
-
 
 const ChatMenu = () => (
     <ChatColStyled>
@@ -29,11 +28,13 @@ const ChatList = (id) => (
     <ChatItemGroup id={id.id}/>
 </ChatColStyled>
 );
+
 const MessageArea = ({ id }) => (
   <div className="flex-grow-1 border d-flex flex-column-reverse" style={{ backgroundColor: "#F1FFFA" }}>
     <MessageList id={id} socket={socket}/>
   </div>
 );
+
 const ChatItemGroup = (id) => {
   const [chatItems, setChatItems] = useState([]);
   const [id2, setId] = useState();
@@ -79,11 +80,31 @@ const Chat = () => {
       console.log('joined chat', room);
     });
   }
+  const [showMeeting, setShowMeeting] = useState(false);
+  const [data, setData] = useState({}); // New state variable
+  const [user, setUser] = useState({});
+
+  const handleClose = () => {
+    socket.emit("decline", { meetingId: data.meetingId, userId: user._id});
+    setShowMeeting(false);
+  };
+  const handleConfirm = () => {
+    console.log(data);
+    socket.emit('accept meeting', { meetingId: data.meetingId, userId: user._id});
+    window.open('/meeting2/' + data.meetingId, '_blank');
+    setShowMeeting(false);
+  };
+  useEffect(() => {
+    axiosClient.get("/info-user/" + id).then((res) => {
+        const data = res.data.data;
+        console.log("data", data);
+        setUser(data);
+    });
+}, [id]);
   useEffect(() => {
     const handleNotify = (data) => {
-        console.log('notify', data);
-        if(window.confirm('Are you sure you want to join this room?'))
-            window.open('/meeting/' + data.meetingId, '_blank');
+      setData(data);
+      setShowMeeting(true);
     };
 
     socket.on("notify", handleNotify);
@@ -110,6 +131,7 @@ const Chat = () => {
                     </Tab.Content>
                 </SecondColumn>
             </Container>
+            <ConfirmDialog show={showMeeting} handleClose={handleClose} handleConfirm={handleConfirm} />
         </Tab.Container>
     );
   };

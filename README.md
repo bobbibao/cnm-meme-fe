@@ -1,10 +1,10 @@
 # MeMe_ChatApp_FrontEnd
 
 ## Author
-- [Kiều Thị Thuỳ Dương]()
-- [Trần Văn Bảo]()
-- [Lê Trần Tú Uyên]()
-- [Ngô Thiên Bâng]()
+- [Kiều Thị Thuỳ Dương (Fullstack Web-App)]()
+- [Trần Văn Bảo (Fullstack]()
+- [Lê Trần Tú Uyên (Backend)]()
+- [Ngô Thiên Bâng (Backend)]()
 - [Lê Hoàng Bảo (Leader)]()
 - [Nguyễn Huỳnh Anh Thắng (Mentor)]()
 
