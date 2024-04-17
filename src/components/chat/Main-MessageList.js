@@ -33,7 +33,7 @@ const MessageList = (id) => {
           if (id.id) {
             const res = await axiosClient.get(`/messages/${id.id}`);
             console.log("messages123123123: ", res.data.data)
-            if (res.data.data || res.status === 200) 
+            if (res.data.data || res.status === 200)
               setMessages(res.data.data);
             else{
               setMessages([]);
@@ -46,20 +46,22 @@ const MessageList = (id) => {
       };
       fetchMessages();
     }, [id.id]);
-  
+
     const listGroupRef = useRef(null);
     useEffect(() => {
       if (listGroupRef.current) {
         listGroupRef.current.scrollTop = listGroupRef.current.scrollHeight;
       }
     }, [listGroupRef.current, messages]);
-  
+
     useEffect(() => {
       socket.on('message', (message) => {
         const newMessage = {
           id: message.id,
           content: message.content,
-          sent: `"${message.senderId}"` === localStorage.getItem('userId'),
+          sent: message.senderId,
+          senderName: message.senderName,
+          avatarSender: message.avatarSender,
           time: message.time,
           type: message.type,
           media: message.media,
@@ -73,11 +75,11 @@ const MessageList = (id) => {
     const handleMouseEnter = (index) => {
       setShowDropdownIndex(index);
     };
-  
+
     const handleMouseLeave = () => {
       setShowDropdownIndex(null);
     };
-  
+
 
 const handleDelete = async (messageId) => {
   const res = await axiosClient.delete(`/message/${messageId}`);
@@ -142,11 +144,12 @@ const handleSendForward = async (index, idChatRoom) => {
         socket.emit('message', data, res.data.data._id);
   }
   socket.on('message', (message) => {
-    console.log('message', message);
     const newMessage = {
       id: message.id,
       content: message.content,
-      sent: `"${message.senderId}"` === localStorage.getItem('userId'),
+      sent: message.senderId,
+      senderName: message.senderName,
+      avatarSender: message.avatarSender,
       isForwarded: true,
       time: message.time,
       type: message.type,
@@ -206,33 +209,29 @@ const convertReaction = (reaction) => {
           <StyledListGroup ref={listGroupRef} className="message-container">
             {messages.length > 0 ? (
               messages.map((message, index) => (
-                <ListGroup.Item key={index} className={`border-0 p-1 d-flex ${message.sent ? 'justify-content-end' : 'justify-content-start'}`} style={{ backgroundColor: "unset" }}
+                <ListGroup.Item key={index} className={`border-0 p-1 d-flex
+                ${message.sent.toString() === JSON.parse(localStorage.getItem('userId')) ? 'justify-content-end' : 'justify-content-start'}`
+              } style={{ backgroundColor: "unset" }}
                   onMouseEnter={() => handleMouseEnter(index)}
                   onMouseLeave={handleMouseLeave}
-
                 >
-                  <div className="message-content d-inline-block border border-primary p-2 rounded position-relative">
+                  {/* Chat Item  */}
+                  <div className='d-flex flex-row'>
+                  <Image
+                          src={message.avatarSender}
+                          className={`mx-2
+                          ${message.sent.toString() === JSON.parse(localStorage.getItem('userId')) ? 'order-2' : 'order-1'}`
+                        }
+                          style={{ width: '40px', height: '40px' }}
+                          roundedCircle
+                        />
+                  <div className={`message-content d-inline-block border border-primary p-2 rounded position-relative
+                          ${message.sent.toString() === JSON.parse(localStorage.getItem('userId')) ? 'order-1' : 'order-2'}`}>
+                    <p className='fst-italic text-muted'>{message.senderName}</p>
                     <div>
-                      {/* {!message.hided && (
-                        <>
-                          {message.isForwarded && <div className="text-muted">Forwarded</div>}
-                          <div style={{ wordWrap: 'break-word', whiteSpace: 'pre-line' }}>
-                            {message.unsent
-                              ? "Tin nhắn đã được thu hồi"
-                              : message.type === "image" && (
-                                  <Image src={message.media.url} style={{ width: '100px', height: '100px' }} />),
-                              message.content.length > 50
-                                ? message.content.length > 25
-                                  ? message.content.substring(0, 50).match(/.{1,25}/g).join('\n') + "..."
-                                  : message.content
-                                : message.content
-                              }
-                          </div>
-                        </>
-                      )} */}
                        {message.hided ? <div className="text-muted">Tin nhắn đã bị ẩn</div>:
                       message.unsent ? <div className="text-muted">Tin nhắn đã bị thu hồi</div>:
-                      // message.media && <Image src={message.media.url} style={{ width: '100px', height: '100px' }} /> 
+                      // message.media && <Image src={message.media.url} style={{ width: '100px', height: '100px' }} />
                       <div style={{ wordWrap: 'break-word', whiteSpace: 'pre-line' }}>
                         {message.isForwarded && <div className="text-muted">Forwarded</div>}
                         {message.type === "image" && ( <Image src={message.media.url} style={{ width: '300px', height: 'auto', borderRadius: '5px', display: 'block' }} />)}
@@ -252,7 +251,7 @@ const convertReaction = (reaction) => {
                       </div>
                     }
                     </div>
-                    <div className={`d-flex justify-content-between align-items-center mt-1 ${!message.sent ? "flex-row-reverse" : ""}`}>
+                    <div className={`d-flex justify-content-between align-items-center mt-1 ${!message.sent.toString() === JSON.parse(localStorage.getItem('userId')) ? "flex-row-reverse" : ""}`}>
                       <div className="d-flex align-items-center">
                         {!message.hided && !message.unsent && message.reactions && message.reactions.map((reaction, index) => {
                           if (index > 1) {
@@ -261,19 +260,19 @@ const convertReaction = (reaction) => {
                           return (
                             <span
                               key={index}
-                              className={`d-flex align-items-center ${!message.sent && index < 1 && "ms-2"}`}
+                              className={`d-flex align-items-center ${!message.sent.toString() === JSON.parse(localStorage.getItem('userId')) && index < 1 && "ms-2"}`}
                               style={{ width: '20px', height: '20px' }}
                             >
                               {convertReaction(reaction.reaction)}
                             </span>
                           );
                         })}
-                        <small className={`${message.sent && "me-2"}`}>{!message.hided && !message.unsent && (message.reactions?.length > 0 && message.reactions?.length)}</small>
+                        <small className={`${message.sent.toString() === JSON.parse(localStorage.getItem('userId')) && "me-2"}`}>{!message.hided && !message.unsent && (message.reactions?.length > 0 && message.reactions?.length)}</small>
                       </div>
                       <small className="text-muted">{!message.hided && !message.unsent && (message.time)}</small>
                     </div>
                     {showDropdownIndex === index && !message.unsent && !message.hided && (
-                      <><Dropdown className="position-absolute" style={message.sent ? { left: '-30px', top: '20%' } : { right: '-30px', top: '20%' }}>
+                      <><Dropdown className="position-absolute" style={message.sent.toString() === JSON.parse(localStorage.getItem('userId')) ? { left: '-30px', top: '20%' } : { right: '-30px', top: '20%' }}>
                         <Dropdown.Toggle
                           variant="link"
                           id="dropdown-settings"
@@ -281,7 +280,7 @@ const convertReaction = (reaction) => {
                         >
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                          {message.sent && (
+                          {message.sent.toString() === JSON.parse(localStorage.getItem('userId')) && (
                             <><Dropdown.Item>
                               <span>Pin</span>
                             </Dropdown.Item><Dropdown.Item onClick={() => handleUnsend(message.id)}>
@@ -299,7 +298,7 @@ const convertReaction = (reaction) => {
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown>
-                      <Dropdown   drop='up' className="position-absolute dropdown2" style={message.sent ? { left: '-60px', top: '20%' } : { right: '-60px', top: '20%' }}>
+                      <Dropdown   drop='up' className="position-absolute dropdown2" style={message.sent.toString() === JSON.parse(localStorage.getItem('userId')) ? { left: '-60px', top: '20%' } : { right: '-60px', top: '20%' }}>
                       <Dropdown.Toggle variant="link" id="dropdown-settings" className="px-2"   bsPrefix="dropdown-toggle-custom">
                           <FontAwesomeIcon icon={faThumbsUp} />
                         </Dropdown.Toggle>
@@ -349,7 +348,7 @@ const convertReaction = (reaction) => {
                         </Dropdown></>
                     )}
                   </div>
-                    
+                </div>
                 </ListGroup.Item>
               ))
             ) : (
@@ -399,7 +398,7 @@ const convertReaction = (reaction) => {
                       </Col>
                     </Row>
                   ))}
-                    
+
                 </Card>
               </Col>
             </Row>
