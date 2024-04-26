@@ -95,6 +95,7 @@ const Chat = () => {
     setShowMeeting(false);
   };
   useEffect(() => {
+    if (!id) return;
     axiosClient.get("/info-user/" + id).then((res) => {
         const data = res.data.data;
         console.log("data", data);

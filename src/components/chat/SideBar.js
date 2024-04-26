@@ -27,7 +27,8 @@ const ItemSidebarStyled = styled.div`
 `
 
 const ImageSidebarStyled = styled(Image)`
-    width: 60%;
+    width: 50px;
+    height: 50px;
 `
 const SideBar = () => {
     // console.log(123);
@@ -187,7 +188,7 @@ const SideBar = () => {
               </ItemSidebarStyled>
 
               <ItemSidebarStyled>
-                <Link to={route.callList}>
+                <Link to={route.friend}>
                   <PersonVcard size={35} color="white" />
                 </Link>
               </ItemSidebarStyled>

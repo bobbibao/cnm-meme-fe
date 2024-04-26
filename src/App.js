@@ -20,7 +20,7 @@ import RegisterOtpConfirm from './pages/RegisterOtpConfirm';
 import ForgotPassword from './pages/ForgotPassword';
 import SendOtp from './components/SendOtp'
 import ListFriendRequest from './pages/ListFriendRequest';
-
+import Friend from './pages/Friend';
 const PrivateRoute = ({ children, requiredRole }) => {
 	const { role } = useContext(AuthToken);
 	if (
@@ -129,6 +129,12 @@ const router = createBrowserRouter([
 			</Layout>
 		),
 	},
+	{
+		path: route.friend,
+		element: (
+			<Friend />
+		)
+	}
 ]);
 function App() {
 	return (

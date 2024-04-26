@@ -27,12 +27,13 @@ const FriendItem =({friend, index, onCheck}) => {
             <div className="d-flex align-items-center">
               <img
                 src={friend.photoURL}
-                alt={friend.username}
+                alt={friend.displayName}
                 width="30"
                 height="30"
                 className="mx-3"
+                 style={{ borderRadius: "50%" }}
               />
-              <span>{friend.username}</span>
+              <span>{friend.displayName}</span>
             </div>
           </Form.Check.Label>
         </Form.Check>
