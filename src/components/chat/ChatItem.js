@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 const ImageSidebarStyled = styled(Image)`
   width: 50px;
+  height: 50px;
   margin: 0 15px;
 `;
 
@@ -16,9 +17,9 @@ const DivImage = styled.div`
   padding: 3px 0 3px 0;
 `;
 
-
 const ChatItem  = (item) => {
   const [lastMessage, setLastMessage] = useState(item.data.lastMessage);
+  console.log(item.data);
   useEffect(() => {
     setLastMessage(item.data.lastMessage);
   });
@@ -53,7 +54,7 @@ const ChatItem  = (item) => {
       </div>
       <div className="d-flex flex-column">
         <span className="p-1" style={{ fontSize: '12px' }}>
-        {lastMessage.time}
+        {lastMessage.createAt}
         </span>
         <div className="d-flex justify-content-end align-items-center">
           {item.data.unreadMessageCount === 0 ? '' : <Badge bg="danger" pill  style={{ fontSize: '9px', padding: '4px 6px', margin: '5px' }}>

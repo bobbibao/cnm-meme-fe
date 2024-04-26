@@ -2,7 +2,7 @@ const route = {
 	home: '/',
 	register:'/register',
 	registerConfirm: "/register-confirm/",
-  forgotPassword: "/forgot-password",
+  	forgotPassword: "/forgot-password",
 	resetPasswordConfirm:'/reset-password-confirm',
 	resetPassword: "/reset-password/:id/:token",
 	sendOtp:"/send-otp",
@@ -12,6 +12,7 @@ const route = {
 	meetingView2:'/meeting2/:meetingId',
 	callList: "/call-list",
 	friendRequest: "/friend-request",
+	friend: "/friend",
 };
 
 export default route;

@@ -220,10 +220,10 @@ function Container(props) {
         <div className="d-flex flex-column justify-content-between align-items-center p-3 w-100 h-100">
           <Controls leave={() => {setJoined(null);} } />
           {[...participants.keys()].map((participantId) => (
-            <ParticipantView
-              participantId={participantId}
-              key={participantId}
-            />
+              <ParticipantView
+                participantId={participantId}
+                key={participantId}
+              />
           ))}
         </div>
       ) : joined && joined === "JOINING" && (

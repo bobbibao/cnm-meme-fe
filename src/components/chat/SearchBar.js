@@ -158,8 +158,7 @@ const SearchBar = () => {
   // ];
   const handleFetchFriends = async () => {
     try {
-      const response = await axiosClient.get(
-        "http://localhost:3000/api/getAllFriend"
+      const response = await axiosClient.get("/getAllFriend"
       );
       if (response.status === 200) {
         // Check if response.data is an array before setting state
@@ -353,15 +352,18 @@ const SearchBar = () => {
                   <StyledListGroup>
                     {/* Mapping through isFriend array if it's an array */}
                     {Array.isArray(isFriend) &&
-                      isFriend.map((friend, index) => (
-                        <FriendItem
-                          friend={friend}
-                          key={friend.username}
-                          onCheck={(userId, isChecked) =>
-                            handleFriendItemCheck(userId, isChecked)
-                          }
-                        />
-                      ))}
+                      isFriend.map((friend, index) => {
+                        console.log(friend)
+                        return (
+                          <FriendItem
+                            friend={friend}
+                            key={friend._id}
+                            onCheck={(userId, isChecked) =>
+                              handleFriendItemCheck(userId, isChecked)
+                            }
+                          />
+                        );
+                      })}
                   </StyledListGroup>
                 </Col>
                 {/* Tạm tắt feature này để update sau  */}

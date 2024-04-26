@@ -217,17 +217,13 @@ const convertReaction = (reaction) => {
                 >
                   {/* Chat Item  */}
                   <div className='d-flex flex-row'>
-                  <Image
-                          src={message.avatarSender}
-                          className={`mx-2
-                          ${message.sent.toString() === JSON.parse(localStorage.getItem('userId')) ? 'order-2' : 'order-1'}`
-                        }
+                  {message.sent.toString() != JSON.parse(localStorage.getItem('userId')) && <Image src={message.avatarSender} className={`mx-2
+                          ${message.sent.toString() === JSON.parse(localStorage.getItem('userId')) ? 'order-2' : 'order-1'}`}
                           style={{ width: '40px', height: '40px' }}
-                          roundedCircle
-                        />
+                          roundedCircle/>}
                   <div className={`message-content d-inline-block border border-primary p-2 rounded position-relative
                           ${message.sent.toString() === JSON.parse(localStorage.getItem('userId')) ? 'order-1' : 'order-2'}`}>
-                    <p className='fst-italic text-muted'>{message.senderName}</p>
+                    {message.sent.toString() != JSON.parse(localStorage.getItem('userId')) && <p className='fst-italic m-0' style={{color: "rgb(24 95 71)"}}>{message.senderName}</p>}
                     <div>
                        {message.hided ? <div className="text-muted">Tin nhắn đã bị ẩn</div>:
                       message.unsent ? <div className="text-muted">Tin nhắn đã bị thu hồi</div>:
@@ -251,7 +247,7 @@ const convertReaction = (reaction) => {
                       </div>
                     }
                     </div>
-                    <div className={`d-flex justify-content-between align-items-center mt-1 ${!message.sent.toString() === JSON.parse(localStorage.getItem('userId')) ? "flex-row-reverse" : ""}`}>
+                    <div className={`d-flex justify-content-between align-items-center mt-1 ${message.sent.toString() === JSON.parse(localStorage.getItem('userId')) ? "" : "flex-row-reverse"}`}>
                       <div className="d-flex align-items-center">
                         {!message.hided && !message.unsent && message.reactions && message.reactions.map((reaction, index) => {
                           if (index > 1) {
@@ -267,7 +263,7 @@ const convertReaction = (reaction) => {
                             </span>
                           );
                         })}
-                        <small className={`${message.sent.toString() === JSON.parse(localStorage.getItem('userId')) && "me-2"}`}>{!message.hided && !message.unsent && (message.reactions?.length > 0 && message.reactions?.length)}</small>
+                        <small className={`${message.sent.toString() === JSON.parse(localStorage.getItem('userId')) && "me-2"} ms-1`}>{!message.hided && !message.unsent && (message.reactions?.length > 0 && message.reactions?.length)}</small>
                       </div>
                       <small className="text-muted">{!message.hided && !message.unsent && (message.time)}</small>
                     </div>
