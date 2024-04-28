@@ -21,6 +21,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import SendOtp from './components/SendOtp'
 import ListFriendRequest from './pages/ListFriendRequest';
 import Friend from './pages/Friend';
+import RecallFriendRequest from './pages/RecallFriendRequest';
 const PrivateRoute = ({ children, requiredRole }) => {
 	const { role } = useContext(AuthToken);
 	if (
@@ -103,6 +104,12 @@ const router = createBrowserRouter([
 		path: route.meetingView2,
 		element: (
 			<MeetingView2 />
+		)
+	},
+	{
+		path: route.RecallFriendRequest,
+		element: (
+			<RecallFriendRequest />
 		)
 	},
 	{

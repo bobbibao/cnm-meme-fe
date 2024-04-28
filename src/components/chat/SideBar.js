@@ -1,6 +1,11 @@
 import  React, { useState, useEffect, useContext, useRef }  from "react";
 import { Image, Container, Row, Col, Card, Form  } from 'react-bootstrap';
-import { ChatDotsFill, PersonVcard, PersonPlusFill } from 'react-bootstrap-icons';
+import {
+  ChatDotsFill,
+  PersonVcard,
+  PersonPlusFill,
+  PersonDash,
+} from "react-bootstrap-icons";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styled from "styled-components";
 import Modal from 'react-bootstrap/Modal';
@@ -174,14 +179,23 @@ const SideBar = () => {
     const triggerFileSelectPopup = () => fileInputRef.current.click();
     
         return (
-        <><SideBarStyled>
-            <ItemSidebarStyled style={{ cursor: "pointer" }} onClick={handleShow}>
+          <>
+            <SideBarStyled>
+              <ItemSidebarStyled
+                style={{ cursor: "pointer" }}
+                onClick={handleShow}
+              >
                 <ImageSidebarStyled
-                    src={userInfo.avatar ? userInfo.avatar : "https://i.imgur.com/rsJjBcH.png"}
-                    roundedCircle />
-            </ItemSidebarStyled>
+                  src={
+                    userInfo.avatar
+                      ? userInfo.avatar
+                      : "https://i.imgur.com/rsJjBcH.png"
+                  }
+                  roundedCircle
+                />
+              </ItemSidebarStyled>
 
-            <ItemSidebarStyled>
+              <ItemSidebarStyled>
                 <Link to={route.chat}>
                   <ChatDotsFill size={35} color="white" />
                 </Link>
@@ -198,147 +212,224 @@ const SideBar = () => {
                   <PersonPlusFill size={35} color="white" />
                 </Link>
               </ItemSidebarStyled>
-        </SideBarStyled>
-        <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
+
+              <ItemSidebarStyled>
+                <Link to={route.RecallFriendRequest}>
+                  <PersonDash size={35} color="white" />
+                </Link>
+              </ItemSidebarStyled>
+            </SideBarStyled>
+            <Modal show={show} onHide={handleClose}>
+              <Modal.Header closeButton>
                 <Modal.Title>User Profile</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
+              </Modal.Header>
+              <Modal.Body>
                 <Container fluid>
-                    {/* <Thumb>
+                  {/* <Thumb>
                     <ImageSidebarStyled2 src="https://i.imgur.com/rsJjBcH.png" rounded></ImageSidebarStyled2>
                     <Icon src={icons.camera} rounded></Icon>
                     </Thumb> */}
-      <Row className="justify-content-center align-items-center h-100 w-100 d-flex">
-        <Col lg="6" className="mb-4 mb-lg-0 w-100">
-          <Card className="mb-3" style={{ borderRadius: '.5rem' }}>
-            <Row className="g-0">
-              <Col md="4" className="gradient-custom text-center px-2"
-                style={{ borderTopLeftRadius: '.5rem', borderBottomLeftRadius: '.5rem' }}>
-                      <input type="file" ref={fileInputRef} onChange={handleImageChange} style={{ display: 'none' }} />
-                <Image src={avatar ? avatar :(userInfo.avatar? userInfo.avatar : "https://i.imgur.com/rsJjBcH.png")}
+                  <Row className="justify-content-center align-items-center h-100 w-100 d-flex">
+                    <Col lg="6" className="mb-4 mb-lg-0 w-100">
+                      <Card className="mb-3" style={{ borderRadius: ".5rem" }}>
+                        <Row className="g-0">
+                          <Col
+                            md="4"
+                            className="gradient-custom text-center px-2"
+                            style={{
+                              borderTopLeftRadius: ".5rem",
+                              borderBottomLeftRadius: ".5rem",
+                            }}
+                          >
+                            <input
+                              type="file"
+                              ref={fileInputRef}
+                              onChange={handleImageChange}
+                              style={{ display: "none" }}
+                            />
+                            <Image
+                              src={
+                                avatar
+                                  ? avatar
+                                  : userInfo.avatar
+                                  ? userInfo.avatar
+                                  : "https://i.imgur.com/rsJjBcH.png"
+                              }
+                              alt="Avatar"
+                              className="my-4"
+                              style={{ width: "80px", cursor: "pointer" }}
+                              fluid
+                              onClick={triggerFileSelectPopup}
+                            />
+                            <div className="d-flex flex-column justify-content-between  align-items-center">
+                              {isEditing ? (
+                                <Form.Control
+                                  type="text"
+                                  maxLength={15}
+                                  value={userInfoUpdate.name}
+                                  name="name"
+                                  onChange={handleChange}
+                                />
+                              ) : (
+                                <h5>{userInfoUpdate.name}</h5>
+                              )}
+                              {isEditing ? (
+                                <>
+                                  <Button
+                                    style={{
+                                      backgroundColor: "",
+                                      opacity: "1",
+                                      transition: "all 0.3s ease",
+                                      ":hover": {
+                                        backgroundColor: "#9E9E9E",
+                                        opacity: "1",
+                                      },
+                                    }}
+                                    className="d-flex justify-content-evenly w-75 align-items-center m-2"
+                                    onClick={handleDoneClick}
+                                  >
+                                    {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
+                                    <span className="text-white">Done</span>
+                                  </Button>
+                                  <Button
+                                    variant="danger"
+                                    style={{
+                                      opacity: "1",
+                                      transition: "all 0.3s ease",
+                                      ":hover": {
+                                        backgroundColor: "#9E9E9E",
+                                        opacity: "1",
+                                      },
+                                    }}
+                                    className="d-flex justify-content-evenly w-75 align-items-center m-2"
+                                    onClick={handleCancleClick}
+                                  >
+                                    {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
+                                    <span className="text-white">Cancel</span>
+                                  </Button>
+                                </>
+                              ) : (
+                                <>
+                                  <Button
+                                    style={{
+                                      backgroundColor: "",
+                                      opacity: "0.5",
+                                      transition: "all 0.3s ease",
+                                      ":hover": {
+                                        backgroundColor: "#9E9E9E",
+                                        opacity: "1",
+                                      },
+                                    }}
+                                    className="d-flex justify-content-evenly w-75 align-items-center m-2"
+                                    onClick={handleUpdateClick}
+                                  >
+                                    {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
+                                    <span className="text-white">Update</span>
+                                  </Button>
+                                  <Button
+                                    variant=""
+                                    style={{
+                                      backgroundColor: "",
+                                      opacity: "1",
+                                      transition: "all 0.3s ease",
+                                      ":hover": {
+                                        backgroundColor: "#9E9E9E",
+                                        opacity: "1",
+                                      },
+                                    }}
+                                    className="d-flex justify-content-evenly w-75 align-items-center m-2"
+                                    onClick={handleLogoutClick}
+                                  >
+                                    {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
+                                    <span className="text-black">Logout</span>
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                          </Col>
+                          <Col md="8">
+                            <Card.Body className="p-4">
+                              <h6>Information</h6>
+                              <hr className="mt-0 mb-4" />
+                              <Row className="pt-1">
+                                <Col sm="12" className="mb-3">
+                                  <h6>Email</h6>
+                                  <p className="text-muted">{userInfo.email}</p>
+                                </Col>
+                                <Col sm="6" className="mb-3">
+                                  <h6>Phone</h6>
+                                  {isEditing ? (
+                                    <Form.Control
+                                      type="text"
+                                      value={userInfoUpdate.phone}
+                                      style={{ width: "auto" }}
+                                      name="phone"
+                                      onChange={handleChange}
+                                    />
+                                  ) : (
+                                    <p className="text-muted">
+                                      {userInfoUpdate.phone}
+                                    </p>
+                                  )}
+                                </Col>
+                              </Row>
 
-                  alt="Avatar" className="my-4" style={{ width: '80px', cursor: 'pointer' }} fluid onClick={triggerFileSelectPopup}/>
-                <div className="d-flex flex-column justify-content-between  align-items-center">
-                {isEditing?( <Form.Control type="text" maxLength={15} value={userInfoUpdate.name} name="name" onChange={handleChange} />):
-                  (<h5>{userInfoUpdate.name}</h5>)
-                }
-                {isEditing?
-                  (<><Button style={{
-                              backgroundColor: '',
-                              opacity: '1',
-                              transition: 'all 0.3s ease',
-                              ':hover': {
-                                backgroundColor: '#9E9E9E',
-                                opacity: '1'
-                              }
-                            }} className="d-flex justify-content-evenly w-75 align-items-center m-2"
-                              onClick={handleDoneClick}
-                            >
-                              {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
-                              <span className="text-white">Done</span>
-                            </Button><Button variant="danger" style={{
-                              opacity: '1',
-                              transition: 'all 0.3s ease',
-                              ':hover': {
-                                backgroundColor: '#9E9E9E',
-                                opacity: '1'
-                              }
-                            }} className="d-flex justify-content-evenly w-75 align-items-center m-2"
-                              onClick={handleCancleClick}
-                            >
-                                {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
-                                <span className="text-white">Cancel</span>
-                              </Button></>
-                    ):
-                  (<><Button style={{
-                              backgroundColor: '',
-                              opacity: '0.5',
-                              transition: 'all 0.3s ease',
-                              ':hover': {
-                                backgroundColor: '#9E9E9E',
-                                opacity: '1'
-                              }
-                            }} className="d-flex justify-content-evenly w-75 align-items-center m-2"
-                              onClick={handleUpdateClick}
-                            >
-                              {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
-                              <span className="text-white">Update</span>
-                            </Button><Button variant="" style={{
-                              backgroundColor: '',
-                              opacity: '1',
-                              transition: 'all 0.3s ease',
-                              ':hover': {
-                                backgroundColor: '#9E9E9E',
-                                opacity: '1'
-                              }
-                            }} className="d-flex justify-content-evenly w-75 align-items-center m-2"
-                              onClick={handleLogoutClick}
-                            >
-                                {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
-                                <span className="text-black">Logout</span>
-                              </Button></>)
-                }
-                    
-                </div>
-              </Col>
-              <Col md="8">
-                <Card.Body className="p-4">
-                  <h6>Information</h6>
-                  <hr className="mt-0 mb-4" />
-                  <Row className="pt-1">
-                    <Col sm="12" className="mb-3">
-                      <h6>Email</h6>
-                      <p className="text-muted">{userInfo.email}</p>
-                    </Col>
-                    <Col sm="6" className="mb-3">
-                      <h6>Phone</h6>
-                      {isEditing ? (
-                        <Form.Control type="text" value={userInfoUpdate.phone}  style={{width: 'auto'}} name="phone" onChange={handleChange}/>
-                      ) : (
-                        <p className="text-muted">{userInfoUpdate.phone}</p>
-                      )}
+                              <hr className="mt-0 mb-4" />
+                              <Row className="pt-1">
+                                <Col sm="8" className="mb-3">
+                                  <h6>Dob</h6>
+                                  {isEditing ? (
+                                    <Form.Control
+                                      type="date"
+                                      value={userInfoUpdate.dob
+                                        .split("-")
+                                        .reverse()
+                                        .join("-")}
+                                      style={{ width: "auto" }}
+                                      name="dob"
+                                      onChange={handleChange}
+                                    />
+                                  ) : (
+                                    <p className="text-muted">
+                                      {userInfoUpdate.dob}
+                                    </p>
+                                  )}
+                                </Col>
+                                <Col sm="4" className="mb-3">
+                                  <h6>Gender</h6>
+                                  <p className="text-muted">
+                                    {userInfo.gender}
+                                  </p>
+                                </Col>
+                              </Row>
+
+                              <div className="d-flex justify-content-start">
+                                <a href="#!">
+                                  <i className="fab fa-facebook me-3"></i>
+                                </a>
+                                <a href="#!">
+                                  <i className="fab fa-twitter me-3"></i>
+                                </a>
+                                <a href="#!">
+                                  <i className="fab fa-instagram me-3"></i>
+                                </a>
+                              </div>
+                            </Card.Body>
+                          </Col>
+                        </Row>
+                      </Card>
                     </Col>
                   </Row>
-
-                  <hr className="mt-0 mb-4" />
-                  <Row className="pt-1">
-                    <Col sm="8" className="mb-3">
-                      <h6>Dob</h6>
-                      {isEditing ? (
-                        <Form.Control type="date" value={userInfoUpdate.dob.split("-").reverse().join("-")}  style={{width: 'auto'}} name="dob" onChange={handleChange}/>
-                        ) : (
-                          <p className="text-muted">{userInfoUpdate.dob}</p>
-                        )}
-                    </Col>
-                    <Col sm="4" className="mb-3">
-                      <h6>Gender</h6>
-                      <p className="text-muted">{userInfo.gender}</p>
-                    </Col>
-                    
-                  </Row>
-
-                  <div className="d-flex justify-content-start">
-                    <a href="#!"><i className="fab fa-facebook me-3"></i></a>
-                    <a href="#!"><i className="fab fa-twitter me-3"></i></a>
-                    <a href="#!"><i className="fab fa-instagram me-3"></i></a>
-                  </div>
-                </Card.Body>
-              </Col>
-            </Row>
-          </Card>
-        </Col>
-      </Row>
                 </Container>
-            </Modal.Body>
-            <Modal.Footer>
+              </Modal.Body>
+              <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
-                    Close
+                  Close
                 </Button>
-            </Modal.Footer>
-        </Modal>
-        </>
-    );
+              </Modal.Footer>
+            </Modal>
+          </>
+        );
 }
 
 export default SideBar;

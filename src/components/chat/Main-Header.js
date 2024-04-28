@@ -108,6 +108,12 @@ const Header = (id) => {
         console.log(res);
         setForwarded([...forwarded,index]);
     }
+   
+    const handleOutgroup = async () => {
+      const res = await axiosClient.post("/groups/" + id.id + "/outGroup");
+      console.log(res);
+      window.location.reload();
+    }
     return (
         <><div className="p-2 border-start">
             <Stack direction="horizontal" gap={2}>
@@ -174,7 +180,7 @@ const Header = (id) => {
                                                 alt="Avatar" className="my-4" style={{ width: '80px', cursor: 'pointer' }} fluid/>
                                             <div className="d-flex flex-column justify-content-between  align-items-center">
                                             <h5>{userInfo.name}</h5>
-                                            <Button variant="danger" className="my-2" onClick={handleBt}>{!userInfo.members? "Unfriend": "Leave group"}</Button>
+                                            <Button variant="danger" className="my-2" onClick={handleOutgroup}>{!userInfo.members? "Unfriend": "Leave group"}</Button>
                                             {console.log(user, JSON.parse(localStorage.getItem("userId")))}
                                             <Button variant="" className="my-2" onClick={handleBt}>{!userInfo.members? "Block": user.ownerId === JSON.parse(localStorage.getItem("userId"))? "Delete group": ""}</Button>
                                             </div>

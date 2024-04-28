@@ -1,3 +1,5 @@
+import RecallFriendRequest from "../pages/RecallFriendRequest";
+
 const route = {
 	home: '/',
 	register:'/register',
@@ -13,6 +15,7 @@ const route = {
 	callList: "/call-list",
 	friendRequest: "/friend-request",
 	friend: "/friend",
+	RecallFriendRequest: "/recall-friend-request",
 };
 
 export default route;

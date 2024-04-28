@@ -62,6 +62,7 @@ const SearchBar = () => {
     const res = await axiosClient.post("/add-friend", { userInfo });
     if (res.status === 200) {
       console.log("Add friend success");
+      console.log(res);
       setSent(true);
     }
   };
@@ -353,7 +354,7 @@ const SearchBar = () => {
                     {/* Mapping through isFriend array if it's an array */}
                     {Array.isArray(isFriend) &&
                       isFriend.map((friend, index) => {
-                        console.log(friend)
+                        console.log(friend);
                         return (
                           <FriendItem
                             friend={friend}
