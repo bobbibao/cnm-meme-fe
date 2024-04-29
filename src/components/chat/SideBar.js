@@ -309,172 +309,7 @@ const SideBar = () => {
                                   ? userInfo.avatar
                                   : "https://i.imgur.com/rsJjBcH.png"
                               }
-                              alt="Avatar"
-                              className="my-4"
-                              style={{ width: "80px", cursor: "pointer" }}
-                              fluid
-                              onClick={triggerFileSelectPopup}
-                            />
-                            <div className="d-flex flex-column justify-content-between  align-items-center">
-                              {isEditing ? (
-                                <Form.Control
-                                  type="text"
-                                  maxLength={15}
-                                  value={userInfoUpdate.name}
-                                  name="name"
-                                  onChange={handleChange}
-                                />
-                              ) : (
-                                <h5>{userInfoUpdate.name}</h5>
-                              )}
-                              {isEditing ? (
-                                <>
-                                  <Button
-                                    style={{
-                                      backgroundColor: "",
-                                      opacity: "1",
-                                      transition: "all 0.3s ease",
-                                      ":hover": {
-                                        backgroundColor: "#9E9E9E",
-                                        opacity: "1",
-                                      },
-                                    }}
-                                    className="d-flex justify-content-evenly w-75 align-items-center m-2"
-                                    onClick={handleDoneClick}
-                                  >
-                                    {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
-                                    <span className="text-white">Done</span>
-                                  </Button>
-                                  <Button
-                                    variant="danger"
-                                    style={{
-                                      opacity: "1",
-                                      transition: "all 0.3s ease",
-                                      ":hover": {
-                                        backgroundColor: "#9E9E9E",
-                                        opacity: "1",
-                                      },
-                                    }}
-                                    className="d-flex justify-content-evenly w-75 align-items-center m-2"
-                                    onClick={handleCancleClick}
-                                  >
-                                    {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
-                                    <span className="text-white">Cancel</span>
-                                  </Button>
-                                </>
-                              ) : (
-                                <>
-                                  <Button
-                                    style={{
-                                      backgroundColor: "",
-                                      opacity: "0.5",
-                                      transition: "all 0.3s ease",
-                                      ":hover": {
-                                        backgroundColor: "#9E9E9E",
-                                        opacity: "1",
-                                      },
-                                    }}
-                                    className="d-flex justify-content-evenly w-75 align-items-center m-2"
-                                    onClick={handleUpdateClick}
-                                  >
-                                    {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
-                                    <span className="text-white">Update</span>
-                                  </Button>
-                                  <Button
-                                    variant=""
-                                    style={{
-                                      backgroundColor: "",
-                                      opacity: "1",
-                                      transition: "all 0.3s ease",
-                                      ":hover": {
-                                        backgroundColor: "#9E9E9E",
-                                        opacity: "1",
-                                      },
-                                    }}
-                                    className="d-flex justify-content-evenly w-75 align-items-center m-2"
-                                    onClick={handleLogoutClick}
-                                  >
-                                    {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
-                                    <span className="text-black">Logout</span>
-                                  </Button>
-                                </>
-                              )}
-                            </div>
-                          </Col>
-                          <Col md="8">
-                            <Card.Body className="p-4">
-                              <h6>Information</h6>
-                              <hr className="mt-0 mb-4" />
-                              <Row className="pt-1">
-                                <Col sm="12" className="mb-3">
-                                  <h6>Email</h6>
-                                  <p className="text-muted">{userInfo.email}</p>
-                                </Col>
-                                <Col sm="6" className="mb-3">
-                                  <h6>Phone</h6>
-                                  {isEditing ? (
-                                    <Form.Control
-                                      type="text"
-                                      value={userInfoUpdate.phone}
-                                      style={{ width: "auto" }}
-                                      name="phone"
-                                      onChange={handleChange}
-                                    />
-                                  ) : (
-                                    <p className="text-muted">
-                                      {userInfoUpdate.phone}
-                                    </p>
-                                  )}
-                                </Col>
-                              </Row>
-
-<<<<<<< HEAD
-                              <hr className="mt-0 mb-4" />
-                              <Row className="pt-1">
-                                <Col sm="8" className="mb-3">
-                                  <h6>Dob</h6>
-                                  {isEditing ? (
-                                    <Form.Control
-                                      type="date"
-                                      value={userInfoUpdate.dob
-                                        .split("-")
-                                        .reverse()
-                                        .join("-")}
-                                      style={{ width: "auto" }}
-                                      name="dob"
-                                      onChange={handleChange}
-                                    />
-                                  ) : (
-                                    <p className="text-muted">
-                                      {userInfoUpdate.dob}
-                                    </p>
-                                  )}
-                                </Col>
-                                <Col sm="4" className="mb-3">
-                                  <h6>Gender</h6>
-                                  <p className="text-muted">
-                                    {userInfo.gender}
-                                  </p>
-                                </Col>
-                              </Row>
-
-                              <div className="d-flex justify-content-start">
-                                <a href="#!">
-                                  <i className="fab fa-facebook me-3"></i>
-                                </a>
-                                <a href="#!">
-                                  <i className="fab fa-twitter me-3"></i>
-                                </a>
-                                <a href="#!">
-                                  <i className="fab fa-instagram me-3"></i>
-                                </a>
-                              </div>
-                            </Card.Body>
-                          </Col>
-                        </Row>
-                      </Card>
-=======
-                  alt="Avatar" className="my-4" style={{ width: '80px', cursor: 'pointer' }} fluid onClick={triggerFileSelectPopup}/>
+                                              alt="Avatar" className="my-4" style={{ width: '80px', cursor: 'pointer' }} fluid onClick={triggerFileSelectPopup}/>
                 <div className="d-flex flex-column justify-content-between  align-items-center">
                 {isEditing?( <Form.Control type="text" maxLength={15} value={userInfoUpdate.name} name="name" onChange={handleChange} />):
                   (<h5>{userInfoUpdate.name}</h5>)
@@ -568,21 +403,42 @@ const SideBar = () => {
                       ) : (
                         <p className="text-muted">{userInfoUpdate.phone}</p>
                       )}
->>>>>>> 979457dc4f13aac363ca365fad6582dba216c29f
+                                </Col>
+                              </Row>
+<hr className="mt-0 mb-4" />
+                  <Row className="pt-1">
+                    <Col sm="8" className="mb-3">
+                      <h6>Dob</h6>
+                      {isEditing ? (
+                        <Form.Control type="date" value={userInfoUpdate.dob.split("-").reverse().join("-")}  style={{width: 'auto'}} name="dob" onChange={handleChange}/>
+                        ) : (
+                          <p className="text-muted">{userInfoUpdate.dob}</p>
+                        )}
+                    </Col>
+                    <Col sm="4" className="mb-3">
+                      <h6>Gender</h6>
+                      <p className="text-muted">{userInfo.gender}</p>
+                    </Col>
+                    
+                  </Row>
+
+                  <div className="d-flex justify-content-start">
+                    <a href="#!"><i className="fab fa-facebook me-3"></i></a>
+                    <a href="#!"><i className="fab fa-twitter me-3"></i></a>
+                    <a href="#!"><i className="fab fa-instagram me-3"></i></a>
+                  </div>
+                </Card.Body>
                     </Col>
                   </Row>
+                  </Card>
+        </Col>
+      </Row>
                 </Container>
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                   Close
                 </Button>
-<<<<<<< HEAD
-              </Modal.Footer>
-            </Modal>
-          </>
-        );
-=======
             </Modal.Footer>
         </Modal>
         {/* Modal Change Password                 */}
@@ -654,7 +510,6 @@ const SideBar = () => {
       </Modal>
         </>
     );
->>>>>>> 979457dc4f13aac363ca365fad6582dba216c29f
 }
 
 export default SideBar;
