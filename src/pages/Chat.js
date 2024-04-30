@@ -125,7 +125,7 @@ const Chat = () => {
                         <ChatList id={id}/>
                     </FourthColumn>
                 </FirstColumn>
-  
+
                 <SecondColumn>
                     <Tab.Content className="h-100">
                       {id? <ChatPane eventKey={id} id={id}/> : <div>We are meme</div>}
@@ -170,7 +170,7 @@ const FourthColumn = styled.div`
   flex: 1 1 350px;
   max-width: 350px;
   box-sizing: border-box;
-  
+
   @media (max-width: 700px) {
     display: none;
   }

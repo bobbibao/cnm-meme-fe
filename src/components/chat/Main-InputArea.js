@@ -1,11 +1,12 @@
-import React, { useState, useRef } from "react";
-import { Image, Form, Card, Col, Row, Badge, Button } from 'react-bootstrap';
+import React, { useState, useRef, useEffect } from "react";
+import { Image, Form, Card, Col, Row, Badge, Button, CloseButton } from 'react-bootstrap';
 import Stack from 'react-bootstrap/Stack';
 import { icons } from '../../assets';
 import axiosClient from '../../api/axiosClient';
 import axios from 'axios';
 import Cookies from 'js-cookie'; // import js-cookie
 import InputEmoji from "react-input-emoji"; // Import InputEmoji
+import { useGlobalState } from '../../util/state';
 
 const InputArea = (chatRoomId) => {
     var socket = chatRoomId.socket;
@@ -13,10 +14,25 @@ const InputArea = (chatRoomId) => {
     const [previews, setPreviews] = useState([]); // Change to array for multiple previews
     const [files, setFiles] = useState([]); // Change to array for multiple files
     const [message, setMessage] = useState(''); // Add this line
+    const [showReplyMessage, setShowReplyMessage] = useState(false);
+    const [replyMessage, setReplyMessage] = useGlobalState('replyMessage');
+
+    useEffect(() => {
+        // Chỉ kích hoạt setShowReplyMessage(true) khi replyMessage không rỗng
+        if (replyMessage !== '') {
+            setShowReplyMessage(true);
+        }
+      }, [replyMessage]); // Sử dụng sessionData trong dependency array để đảm bảo useEffect được gọi lại khi sessionData thay đổi
+
+    const handleHideReplyMessage = () => {
+    setShowReplyMessage(false);
+    setReplyMessage(''); // Đặt lại nội dung tin nhắn trả lời
+    };
 
     const handleSubmit = async () => {
         const content = message;
         console.log(content);
+        console.log(showReplyMessage);
         if(files.length > 0) {
             const formData = new FormData();
             files.forEach((file) => {
@@ -25,6 +41,10 @@ const InputArea = (chatRoomId) => {
             formData.append('chatRoomId', chatRoomId.id);
             formData.append('senderId', localStorage.getItem('userId'));
             formData.append('content', content);
+            // Kiểm tra nếu showReplyMessage là true thì mới thêm reply vào formData
+            if (showReplyMessage) {
+                formData.append('reply', replyMessage.messageId);
+            }
             console.log("this is form media", formData.getAll('media'));
             const res = await axios.post(process.env.REACT_APP_API_URL+'/api/send-media', formData, {
                 headers: {
@@ -37,6 +57,7 @@ const InputArea = (chatRoomId) => {
                 setPreviews([]);
                 setFiles([]);
                 setMessage('');
+                handleHideReplyMessage();
                 res.data.data.forEach((mediaData) => {
                     const data = {
                         chatRoomId: chatRoomId.id,
@@ -45,19 +66,29 @@ const InputArea = (chatRoomId) => {
                         media: mediaData.media,
                         type: mediaData.type
                     };
+                    if (showReplyMessage) {
+                        // data.reply =  replyMessage.messageId
+                        data.reply =  replyMessage.messageContent
+                    }
                     socket.emit('message', data, mediaData._id);
                 });
             }
         } else {
             if(content === '') return;
+            // Kiểm tra nếu showReplyMessage là true thì mới thêm replyTo vào formData
             const data = {
                 chatRoomId: chatRoomId.id,
                 senderId: localStorage.getItem('userId'),
-                content: content
+                content: content,
             };
+            if (showReplyMessage) {
+                // data.reply =  replyMessage.messageId
+                data.reply =  replyMessage.messageContent
+            }
             const res = await axiosClient.post(`/send-message`, { data });
             if(res.status === 200) {
                 setMessage('');
+                handleHideReplyMessage()
             }
             socket.emit('message', data, res.data.data._id);
         }
@@ -95,6 +126,18 @@ const InputArea = (chatRoomId) => {
     };
     return (
         <div className="">
+            {replyMessage.messageContent!=='' && showReplyMessage && <Row
+            className="position-absolute border rounded shadow px-2 bg-white"
+            style={{right:'2%',bottom:'7%', width:'72%', height:'60px' }}
+            >
+                <Col md={11} lg={11} className="d-flex flex-column">
+                    <b>Đang trả lời: </b>{replyMessage.messageContent}
+                </Col>
+                <Col md={1} lg={1} className="d-flex justify-content-center align-items-center">
+                    <CloseButton aria-label="Hide" onClick={handleHideReplyMessage}/>
+                </Col>
+                {/* <Col md={1} lg={1}></Col> */}
+            </Row>}
             <Stack direction="horizontal" gap={3} className="pe-2 border">
                 <Form onSubmit={handleSubmit} className="w-100 d-flex border-0 justify-content-evenly align-items-center position-relative" encType="multipart/form-data">
                     <InputEmoji
@@ -125,6 +168,7 @@ const InputArea = (chatRoomId) => {
                 </Form>
             </Stack>
         </div>
+
     );
 };
 
