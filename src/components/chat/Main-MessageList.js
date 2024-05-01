@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Container, Row, Col, ListGroup, Image, Dropdown, Card, Form } from 'react-bootstrap';
+import { Container, Row, Col, ListGroup, Image, Dropdown, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styled from "styled-components";
 import axiosClient from '../../api/axiosClient';
@@ -7,8 +7,9 @@ import axiosClient from '../../api/axiosClient';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faFile } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faReply } from '@fortawesome/free-solid-svg-icons';
 
+import { useGlobalState } from '../../util/state';
 
 const StyledListGroup = styled(ListGroup)`
   max-height: 83vh;
@@ -29,6 +30,8 @@ const MessageList = (id) => {
   const [isPinTableVisible, setIsPinTableVisible] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showPinTable, setShowPinTable] = useState(false);
+
+  const [replyMessage, setReplyMessage] = useGlobalState('replyMessage')
   // console.log("socket", socket);
     const [messages, setMessages] = useState([  ]);
     useEffect(() => {
@@ -39,7 +42,7 @@ const MessageList = (id) => {
             console.log("messages123123123: ", res.data.data)
             if (res.data.data || res.status === 200)
             {
-            
+
               setMessages(res.data.data);
               // res.data.data.map(message=>{
               //   if(message.pin )
@@ -75,6 +78,7 @@ const MessageList = (id) => {
           id: message.id,
           content: message.content,
           sent: message.senderId,
+          reply: message.reply,
           senderName: message.senderName,
           avatarSender: message.avatarSender,
           time: message.time,
@@ -110,7 +114,7 @@ const MessageList = (id) => {
           // Message is already pinned, do not proceed
           return;
         }
-    
+
         const response = await axiosClient.patch(`/pin-message/${messageId}`, {
           data: {
             chatRoomId: idChatRoom,
@@ -119,12 +123,12 @@ const MessageList = (id) => {
         if (response.status === 200) {
           // Update the UI to reflect the pinned message
           setMessages(messages.map(message => message.id === messageId ? { ...message, pin: true } : message));
-          
+
           // Add the pinned message to the pinnedMessages array
           const messageToAdd = messages.find(message => message.id === messageId);
           setPinnedMessages([...pinnedMessages, messageToAdd]);
           setShowPinTable(true);
-          
+
 
         } else {
           // Handle other status codes if needed
@@ -133,22 +137,22 @@ const MessageList = (id) => {
         // Handle errors if the request fails
       }
     };
-    
-    
+
+
     const handleUnpin = async (messageId, idChatRoom) => {
       try {
         // Make a PATCH request to unpin the message
         const response = await axiosClient.patch(`/unpin-message/${messageId}`, {
           chatRoomId: idChatRoom,
         });
-  
+
         // Check if the request was successful
         if (response.status === 200) {
           // Update pinnedMessages state to remove the message with the specified messageId
           setPinnedMessages(prevPinnedMessages =>
             prevPinnedMessages.filter(message => message.id !== messageId)
           );
-  
+
           // Check if there's only one pinned message left after unpinning
           if (pinnedMessages.length === 1) {
             setIsPinTableVisible(false); // Hide the pin table if only one message is pinned
@@ -284,6 +288,34 @@ const convertReaction = (reaction) => {
       return '';
   }
 };
+
+const handleReplyMessage = (messageId, messageContent, messageType) => {
+  if(messageType==='image') messageContent = 'Hình ảnh'
+  else if(messageType==='video') messageContent = 'Video'
+  else if(messageType==='file') messageContent = 'File'
+  else messageContent = messageContent
+  setReplyMessage({messageId, messageContent}); // Cập nhật state
+}
+
+// const [scrollToMessageId, setScrollToMessageId] = useState(null);
+ // Effect để cuộn đến tin nhắn cụ thể khi scrollToMessageId thay đổi
+//  useEffect(
+  const handleScrollToReply = (messageReply) => {
+    if (messageReply && listGroupRef.current) {
+      const targetMessageElement = listGroupRef.current.querySelector(`[message="${messageReply}"]`);
+      if (targetMessageElement) {
+        targetMessageElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        targetMessageElement.classList.remove('border-0')
+        targetMessageElement.style.border = '2px solid var(--primary)'
+
+        // Thiết lập thời gian để tắt viền
+        setTimeout(() => {
+          targetMessageElement.classList.add('border-0')
+        }, 2000); // Sau 2 giây
+      }
+    }
+  }
+// }, [scrollToMessageId]);
   return (
     <>
       <Container fluid className="message-list-container p-1 h-100">
@@ -343,7 +375,7 @@ const convertReaction = (reaction) => {
                   onClick={() => setShowDropdown(false)}
                 >
                 </Dropdown.Toggle>
-              
+
               </Dropdown>
               </li>
             ))}
@@ -357,6 +389,9 @@ const convertReaction = (reaction) => {
                 messages.map((message, index) => (
                   <ListGroup.Item
                     key={index}
+                    // message={message.id}
+                    message={message.content}
+
                     className={`border-0 p-1 d-flex
                 ${
                   message.sent.toString() ===
@@ -412,11 +447,19 @@ const convertReaction = (reaction) => {
                             </div>
                           ) : (
                             // message.media && <Image src={message.media.url} style={{ width: '100px', height: '100px' }} />
+                            <div>
+                              {/* Component nhảy tới tin nhắn được reply  */}
+                              {message.reply!=='' &&
+                              <Button variant="outline-secondary" onClick={() =>
+                              // setScrollToMessageId(message.reply)
+                              handleScrollToReply(message.reply)
+                              }>{message.reply}</Button>}
+
                             <div
-                              style={{
-                                wordWrap: "break-word",
-                                whiteSpace: "pre-line",
-                              }}
+                            style={{
+                              wordWrap: "break-word",
+                              whiteSpace: "pre-line",
+                            }}
                             >
                               {message.isForwarded && (
                                 <div className="text-muted">Forwarded</div>
@@ -471,6 +514,7 @@ const convertReaction = (reaction) => {
                                       .join("\n") + "..."
                                   : message.content
                                 : message.content}
+                            </div>
                             </div>
                           )}
                         </div>
@@ -528,6 +572,29 @@ const convertReaction = (reaction) => {
                           !message.unsent &&
                           !message.hided && (
                             <>
+                              {/* Reply Button  */}
+                              <Dropdown
+                                  className="position-absolute"
+                                  style={
+                                    message.sent.toString() ===
+                                    JSON.parse(localStorage.getItem("userId"))
+                                      ? { left: "-90px", top: "20%" }
+                                      : { right: "-90px", top: "20%" }
+                                  }
+                              >
+                                <Dropdown.Toggle
+                                  variant="link"
+                                  id="dropdown-reply"
+                                  className="px-2"
+                                  bsPrefix="dropdown-toggle-custom"
+                                >
+                                  <FontAwesomeIcon icon={faReply}
+                                    onClick={() => handleReplyMessage(message.id, message.content, message.type)}
+                                  />
+                                </Dropdown.Toggle>
+                              </Dropdown>
+
+                              {/* Option Button  */}
                               <Dropdown
                                 className="position-absolute"
                                 style={
@@ -577,6 +644,8 @@ const convertReaction = (reaction) => {
                                   </Dropdown.Item>
                                 </Dropdown.Menu>
                               </Dropdown>
+
+                              {/* Reaction Button  */}
                               <Dropdown
                                 drop="up"
                                 className="position-absolute dropdown2"
