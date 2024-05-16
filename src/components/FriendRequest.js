@@ -1,24 +1,17 @@
-import React, { useState } from "react";
-import {  Dropdown, Button, Row, Col } from "react-bootstrap"; // Thêm Button từ react-bootstrap
-import { ArrowLeft } from "react-bootstrap-icons"; // Import biểu tượng ArrowLeft từ react-bootstrap-icons
+import React, { useState, useEffect, useContext } from "react";
+import { Container, Row, Col, Card, Button, Dropdown } from "react-bootstrap";
+import { ArrowLeft } from "react-bootstrap-icons";
 import styled from "styled-components";
-import SideBar from "../components/chat/SideBar"; // Import SideBar component
-import { AuthToken } from "../authToken";
+import SideBar from "../components/chat/SideBar";
+import SearchBar from "../components/chat/SearchBar";
 import axiosClient from "../api/axiosClient";
-import { useEffect } from "react";
-import { useContext } from "react";
+import { AuthToken } from "../authToken";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "./chat/SearchBar";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-const ContactCard = styled.div`
-  border: 1px solid #d8d8d8;
-  border-radius: 8px;
-  padding: 20px;
+const ContactCard = styled(Card)`
   margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 `;
 
 const ContactInfo = styled.div`
@@ -39,30 +32,13 @@ const ContactPhone = styled.p`
   color: #606770;
 `;
 
-
-const Contact = ({ name, email, phone, gender, onAction }) => {
-  return (
-    <ContactCard>
-      <ContactInfo>
-        <ContactName>{name}</ContactName>
-        <ContactEmail>Email: {email}</ContactEmail>
-        <ContactPhone>Số điện thoại: {phone}</ContactPhone>
-        <ContactPhone>Giới tính: {gender}</ContactPhone>
-      </ContactInfo>
-      <Dropdown>
-        <Dropdown.Toggle variant="primary" id="dropdown-basic">
-          Thao tác
-        </Dropdown.Toggle>
-        <Dropdown.Menu>
-          <Dropdown.Item onClick={() => onAction("addFriend")}>Accept</Dropdown.Item>
-          {/* <Dropdown.Item onClick={() => onAction("block")}>Chặn</Dropdown.Item> */}
-          <Dropdown.Item onClick={() => onAction("delete")}>Decline</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-    </ContactCard>
-  );
-};
-
+const Avatar = styled.img`
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+`;
 
 const FriendRequest = () => {
   const navigate = useNavigate();
@@ -71,87 +47,121 @@ const FriendRequest = () => {
 
   useEffect(() => {
     const getFriendRequestList = async () => {
-      await axiosClient.get("/getAllFriendRequest")
-       .then((response) => {
-          console.log(response.data.data);
-          const friendRequests = response.data.data; 
-          const extractedData = []; 
-
-          for (const friend of friendRequests) {
-            console.log(friend);
-            const friendInfo = {
-              username: friend.name,
-              email: friend.email,
-              phoneNumber: friend.phone,
-              gender: friend.gender,
-            };
-
-            extractedData.push(friendInfo);
-          }
-          // và chị sẽ set cái mảng data này vào state contacts
-          setContacts(extractedData);
-        })
-        .catch((error) => {
-          console.error(error.message);
-        });
+      try {
+        const response = await axiosClient.get("/getAllFriendRequest");
+        const friendRequests = response.data.data;
+        const extractedData = friendRequests.map((friend) => ({
+          username: friend.name,
+          email: friend.email,
+          phoneNumber: friend.phone,
+          gender: friend.gender,
+          avatar: friend.avatar, // Assuming `photoURL` contains the URL to the avatar
+        }));
+        setContacts(extractedData);
+      } catch (error) {
+        console.error("Failed to fetch friend requests:", error);
+      }
     };
     getFriendRequestList();
   }, [user]);
 
-
   const handleAction = async (action, email) => {
-    if (action === "block") {
-      await axiosClient.post(process.env.REACT_APP_API_URL + "/block/blockUser",
-         { email }
-        )
-        .then((response) => {
-          console.log(response.data); 
-        })
-        .catch((error) => {
-          console.error(error.message); 
-        });
-      console.log(`Chặn người dùng có email: ${email}`);
-    } else if (action === "delete") {
-      await axiosClient.post(
-        process.env.REACT_APP_API_URL + "/friend/deleteFriendRequest",
-
-          { email }
-        )
-        .then((response) => {
-          console.log(response.data); 
-        })
-        .catch((error) => {
-          console.error(error.message);
-        });
-    }else if (action === "addFriend") {
-      console.log(`Kết bạn với người dùng có email: ${email}`);
-      const res = await axiosClient.post("/accept-friend", { email });
-      console.log(res.data);
+    try {
+      if (action === "delete") {
+        await axiosClient.post("/decline-friend-request", { email });
+      } else if (action === "addFriend") {
+        await axiosClient.post("/accept-friend", { email });
+      }
+      setContacts(contacts.filter((contact) => contact.email !== email));
+    } catch (error) {
+      console.error(`Failed to ${action} friend request:`, error);
     }
   };
+
   return (
-    <Row>
-      <Col md={1} style={{width: '101px'}}>
-        <SideBar />
-      </Col>
-      <Col md={11}>
-        <SearchBar />
-        <Button variant="light" onClick={() => navigate(-1)}>
-          <ArrowLeft />
-        </Button>
-        <h1>Danh sách yêu cầu kết bạn</h1>
-        {contacts.map((contact, index) => (
-          <Contact
-            key={index}
-            name={contact.username}
-            email={contact.email}
-            phone={contact.phoneNumber}
-            gender={contact.gender}
-            onAction={(action) => handleAction(action, contact.email)}
-          />
-        ))}
-      </Col>
-    </Row>
+    <Container fluid className="m-0 p-0">
+      <Row>
+        <Col md={1} style={{ width: "101px" }}>
+          <SideBar />
+        </Col>
+        <Col md={10}>
+          <SearchBar />
+          <Button variant="light" onClick={() => navigate(-1)} className="mb-3">
+            <ArrowLeft /> Back
+          </Button>
+          <Row>
+            <h1>Danh sách yêu cầu kết bạn</h1>
+          </Row>
+          <div style={{ overflowY: "auto", maxHeight: "730px" }}>
+            {contacts.map((friend, index) => (
+              <Row key={index}>
+                <ContactCard className="mb-3">
+                  <Card.Body>
+                    <Row>
+                      <Col
+                        md={2}
+                        className="d-flex align-items-center justify-content-center p-0"
+                      >
+                        <Card.Img
+                          variant="top"
+                          src={friend.avatar}
+                          style={{
+                            width: "70px",
+                            height: "70px",
+                            borderRadius: "50px",
+                          }}
+                        />
+                      </Col>
+                      <Col md={8}>
+                        <ContactInfo>
+                          <ContactName>{friend.username}</ContactName>
+                          <ContactEmail>Email: {friend.email}</ContactEmail>
+                          <ContactPhone>
+                            Số điện thoại: {friend.phoneNumber}
+                          </ContactPhone>
+                          <ContactPhone>
+                            Giới tính: {friend.gender}
+                          </ContactPhone>
+                        </ContactInfo>
+                      </Col>
+                      <Col
+                        md={2}
+                        className="d-flex align-items-center justify-content-center p-0"
+                      >
+                        <Dropdown>
+                          <Dropdown.Toggle
+                            variant="primary"
+                            id="dropdown-basic"
+                          >
+                            Thao tác
+                          </Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item
+                              onClick={() =>
+                                handleAction("addFriend", friend.email)
+                              }
+                            >
+                              Accept
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onClick={() =>
+                                handleAction("delete", friend.email)
+                              }
+                            >
+                              Decline
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </ContactCard>
+              </Row>
+            ))}
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

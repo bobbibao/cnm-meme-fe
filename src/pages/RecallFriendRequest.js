@@ -4,10 +4,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import SideBar from "../components/chat/SideBar";
 import axiosClient from "../api/axiosClient";
 import { TextCenter } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "react-bootstrap-icons";
 
 const RecallFriendRequest = () => {
   const [friends, setFriends] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     fetchData();
   }, []);
@@ -44,8 +46,11 @@ const RecallFriendRequest = () => {
           <SideBar />
         </Col>
         <Col md={10}>
+          <Button variant="light" onClick={() => navigate(-1)} className="mb-3">
+            <ArrowLeft /> Back
+          </Button>
           <Row>
-            <h1 >Danh sách lời mời kết bạn đã gửi</h1>
+            <h1 TextCenter>Danh sách lời mời kết bạn đã gửi</h1>
           </Row>
           <div style={{ overflowY: "auto", maxHeight: "730px" }}>
             {friends.map((friend, index) => (
