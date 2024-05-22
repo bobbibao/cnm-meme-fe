@@ -76,7 +76,11 @@ const Header = (id) => {
   };
   const handleClose = () => setShow(false);
   const handleClose2 = () => setShow2(false);
-  const handleBt = () => {};
+  const handleBt = async (groupId) => {
+    console.log(groupId);
+    const res = await axiosClient.delete("/delete-group/" + groupId);
+    console.log(res);
+  };
   // useEffect(() => {
   // // if(!meetingId){
   // //     setMeetingId("meetingId");
@@ -122,6 +126,7 @@ const Header = (id) => {
   const handleOutgroup = async () => {
     const res = await axiosClient.post("/groups/" + id.id + "/outGroup");
     console.log(res);
+    navigate("/chat");
     window.location.reload();
   };
 const handleUnfriend = async (friendId) => {
@@ -287,7 +292,7 @@ const handleAddFriend = async () => {
                           variant="danger"
                           className="my-2"
                           onClick={() => {
-                            if (isFriend) {
+                            if (!userInfo.members) {
                               handleUnfriend(user._id);
                             } else if (userInfo.isGroup) {
                               handleOutgroup();
@@ -300,7 +305,7 @@ const handleAddFriend = async () => {
                           user,
                           JSON.parse(localStorage.getItem("userId"))
                         )}
-                        <Button variant="" className="my-2" onClick={handleBt}>
+                        <Button variant="" className="my-2" onClick={() => handleBt(user._id)}>
                           {!userInfo.members
                             ? "Block"
                             : user.ownerId ===
