@@ -16,6 +16,7 @@ const InputArea = (chatRoomId) => {
     const [message, setMessage] = useState(''); // Add this line
     const [showReplyMessage, setShowReplyMessage] = useState(false);
     const [replyMessage, setReplyMessage] = useGlobalState('replyMessage');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         // Chỉ kích hoạt setShowReplyMessage(true) khi replyMessage không rỗng
@@ -30,6 +31,8 @@ const InputArea = (chatRoomId) => {
     };
 
     const handleSubmit = async () => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         const content = message;
         console.log(content);
         console.log(showReplyMessage);
@@ -88,10 +91,12 @@ const InputArea = (chatRoomId) => {
             const res = await axiosClient.post(`/send-message`, { data });
             if(res.status === 200) {
                 setMessage('');
-                handleHideReplyMessage()
+                if(showReplyMessage)
+                    handleHideReplyMessage()
             }
             socket.emit('message', data, res.data.data._id);
         }
+        setTimeout(() => setIsSubmitting(false), 1000);
     };
 
     const triggerFileSelectPopup = () => fileInputRef.current.click();
