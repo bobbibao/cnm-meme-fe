@@ -43,8 +43,6 @@ const SearchBar = () => {
         if (res.status === 200) {
           const userData = res.data.data;
           setUserInfo(userData);
-          console.log("userData", userData);
-          console.log("userInfo", userInfo);
           if (userData.isFriend) setIsFriend(true);
           else if (userData.sent) setSent(true);
           else {
