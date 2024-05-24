@@ -380,7 +380,7 @@ const SideBar = () => {
                               onClick={handleShowModal}
                             >
                                 {/* <ImageSidebarStyledEdit src={icons.edit_user}></ImageSidebarStyledEdit> */}
-                                <span className="text-black">Change Password</span>
+                                <span className="text-white">Change Password</span>
                               </Button>
                               </>)
                 }

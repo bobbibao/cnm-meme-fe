@@ -120,6 +120,7 @@ const SearchBar = () => {
       console.log("Group created successfully:", response.data);
       setCheckedUserId([])
       setShowGroup(false); // Assuming setState function for showing group modal/dialog
+      window.location.reload();
     } catch (error) {
       alert(error.response.data.error);
       setCheckedUserId([])
