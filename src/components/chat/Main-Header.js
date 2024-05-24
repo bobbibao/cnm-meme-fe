@@ -15,8 +15,9 @@ const Header = (id) => {
   const [user, setUser] = useState({});
   const [meetingId, setMeetingId] = useState();
   const [isFriend, setIsFriend] = useState(true); // Giả sử ban đầu là bạn bè
-  const [sentRequest, setSentRequest] = useState(false); // Giả sử ban đầu là chưa gửi yêu cầu
-    const [isMember, setIsMember] = useState(false);
+  const [sentRequest, setSentRequest] = useState(false); // Giả sử ban đầu là chưa gửi yêu 
+  const [receivedRequest, setReceivedRequest] = useState(false); // Giả sử ban đầu là chưa nhận yêu cầu
+  const [isMember, setIsMember] = useState(false);
 
   const navigate = useNavigate();
   var socket = id.socket;
@@ -29,6 +30,8 @@ const Header = (id) => {
       }else{
         setIsFriend(data.friends?.includes(JSON.parse(localStorage.getItem("userId"))));
         setSentRequest(data.friendsRequest?.includes(JSON.parse(localStorage.getItem("userId"))));
+        setReceivedRequest(data.requestsSent?.includes(JSON.parse(localStorage.getItem("userId"))));
+        console.log("data user: ", data.requestsSent?.includes(JSON.parse(localStorage.getItem("userId"))));
       }
       setUser(data);
     });
@@ -273,7 +276,7 @@ const handleAddFriend = async () => {
             }}
             disabled={sentRequest}
           >
-            {sentRequest ? "Đã gửi" : "Kết bạn"}
+            {sentRequest ? "Đã gửi": receivedRequest? "Đồng ý kết bạn" : "Kết bạn"}
           </Button>
         </div>
       </div>
@@ -326,7 +329,7 @@ const handleAddFriend = async () => {
                             }
                           }}
                         >
-                          {!userInfo.members  ?  isFriend? "Huỷ kết bản": sentRequest? "Đã gửi": "Kết bạn" : "Rời nhóm"}
+                          {!userInfo.members  ?  isFriend? "Huỷ kết bạn": sentRequest? "Đã gửi": receivedRequest? "Đồng ý kết bạn" : "Kết bạn" : "Rời nhóm"}
                         </Button>
                         {/* {console.log(
                           user,
