@@ -319,7 +319,7 @@ const handleReplyMessage = (messageId, messageContent, messageType) => {
   return (
     <>
       <Container fluid className="message-list-container p-1 h-100">
-        <Row className="m-0 position-relative">
+        <Row className="m-0 position-relative h-100">
         <div className="position-absolute z-3">
       {/* Display the first pinned message */}
       {pinnedMessages.length > 0 && !showDropdown && (
@@ -383,8 +383,8 @@ const handleReplyMessage = (messageId, messageContent, messageType) => {
         </div>
       )}
       </div>
-          <Col className="p-0">
-            <StyledListGroup ref={listGroupRef} className="message-container">
+          <Col className="p-0 h-100">
+            <StyledListGroup ref={listGroupRef} className="message-container h-100">
               {messages.length > 0 ? (
                 messages.map((message, index) => (
                   <ListGroup.Item
