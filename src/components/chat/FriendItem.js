@@ -47,4 +47,4 @@ border-radius:10px;
  background-color: 	#D3D3D3;
 }
 `
-export default FriendItem
+export default FriendItem;

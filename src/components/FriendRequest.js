@@ -84,7 +84,7 @@ const FriendRequest = () => {
         <Col md={1} style={{ width: "101px" }}>
           <SideBar />
         </Col>
-        <Col md={10}>
+        <Col md={11}>
           <SearchBar />
           <Button variant="light" onClick={() => navigate(-1)} className="mb-3">
             <ArrowLeft /> Back
@@ -93,71 +93,78 @@ const FriendRequest = () => {
             <h1>Danh sách yêu cầu kết bạn</h1>
           </Row>
           <div style={{ overflowY: "auto", maxHeight: "730px" }}>
+            <Row>
             {contacts.map((friend, index) => (
-              <Row key={index}>
-                <ContactCard className="mb-3">
-                  <Card.Body>
-                    <Row>
-                      <Col
-                        md={2}
-                        className="d-flex align-items-center justify-content-center p-0"
-                      >
-                        <Card.Img
-                          variant="top"
-                          src={friend.avatar}
-                          style={{
-                            width: "70px",
-                            height: "70px",
-                            borderRadius: "50px",
-                          }}
-                        />
-                      </Col>
-                      <Col md={8}>
-                        <ContactInfo>
-                          <ContactName>{friend.username}</ContactName>
-                          <ContactEmail>Email: {friend.email}</ContactEmail>
-                          <ContactPhone>
-                            Số điện thoại: {friend.phoneNumber}
-                          </ContactPhone>
-                          <ContactPhone>
-                            Giới tính: {friend.gender}
-                          </ContactPhone>
-                        </ContactInfo>
-                      </Col>
-                      <Col
-                        md={2}
-                        className="d-flex align-items-center justify-content-center p-0"
-                      >
-                        <Dropdown>
-                          <Dropdown.Toggle
-                            variant="primary"
-                            id="dropdown-basic"
-                          >
-                            Thao tác
-                          </Dropdown.Toggle>
-                          <Dropdown.Menu>
-                            <Dropdown.Item
-                              onClick={() =>
-                                handleAction("addFriend", friend.email)
-                              }
+                <Col  key={index} md ={6}>
+                  <ContactCard className="mb-3">
+                    <Card.Body>
+                      <Row>
+                        <Col
+                          md={2}
+                          className="d-flex align-items-center justify-content-center p-0"
+                        >
+                          <Card.Img
+                            variant="top"
+                            src={friend.avatar}
+                            style={{
+                              width: "70px",
+                              height: "70px",
+                              borderRadius: "50px",
+                            }}
+                          />
+                        </Col>
+                        <Col md={7}>
+                          <ContactInfo>
+                            <ContactName>{friend.username}</ContactName>
+                            <ContactEmail>Email: {friend.email}</ContactEmail>
+                            <ContactPhone>
+                              Số điện thoại: {friend.phoneNumber}
+                            </ContactPhone>
+                            <ContactPhone>
+                              Giới tính: {friend.gender}
+                            </ContactPhone>
+                          </ContactInfo>
+                        </Col>
+                        <Col
+                          md={2}
+                          className="d-flex flex-column align-items-center justify-content-around p-0"
+                        >
+                          {/* <Dropdown>
+                            <Dropdown.Toggle
+                              variant="primary"
+                              id="dropdown-basic"
                             >
-                              Accept
-                            </Dropdown.Item>
-                            <Dropdown.Item
-                              onClick={() =>
-                                handleAction("delete", friend.email)
-                              }
-                            >
-                              Decline
-                            </Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      </Col>
-                    </Row>
-                  </Card.Body>
-                </ContactCard>
-              </Row>
+                              Thao tác
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu> */}
+                              {/* <Dropdown.Item */}
+                              <Button
+                                onClick={() =>
+                                  handleAction("addFriend", friend.email)
+                                }
+                              >
+                                Accept
+                              </Button>
+                              {/* </Dropdown.Item> */}
+                              {/* <Dropdown.Item */}
+                              <Button variant="danger"
+                                onClick={() =>
+                                  handleAction("delete", friend.email)
+                                }
+                              >
+                                Decline
+                                </Button>
+                              {/* </Dropdown.Item> */}
+                            {/* </Dropdown.Menu>
+                          </Dropdown> */}
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </ContactCard>
+
+                </Col>
             ))}
+            </Row>
           </div>
         </Col>
       </Row>

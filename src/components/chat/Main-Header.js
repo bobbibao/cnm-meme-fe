@@ -5,7 +5,6 @@ import { icons } from "../../assets";
 import styled from "styled-components";
 import axiosClient from "../../api/axiosClient";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineUser } from 'react-icons/ai'; // Import user icon
 
 
 import Modal from 'react-bootstrap/Modal';
@@ -200,7 +199,7 @@ const handleAddFriend = async () => {
               style={{ width: "25px", height: "25px" }}
             />
           </div>
-          {/* 
+          {/*
            <div className="p-1 mx-1 image-hover">
              <AiOutlineUser // Sử dụng user icon
                style={{ width: "25px", height: "25px" }}

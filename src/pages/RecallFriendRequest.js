@@ -45,7 +45,7 @@ const RecallFriendRequest = () => {
         <Col md={1} style={{ width: "101px" }}>
           <SideBar />
         </Col>
-        <Col md={10}>
+        <Col md={11}>
           <Button variant="light" onClick={() => navigate(-1)} className="mb-3">
             <ArrowLeft /> Back
           </Button>
