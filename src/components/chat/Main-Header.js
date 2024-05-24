@@ -85,14 +85,10 @@ const Header = (id) => {
   const handleBt = async (groupId) => {
     // console.log(groupId);
     const res = await axiosClient.delete("/delete-group/" + groupId);
-<<<<<<< HEAD
-    // console.log(res);
-=======
     console.log(res);
     if (res.status === 200) {
       navigate("/chat");
     }
->>>>>>> ee0b4ad (fix delete group)
   };
   // useEffect(() => {
   // // if(!meetingId){
