@@ -229,21 +229,6 @@ const handleSendForward = async (index, idChatRoom) => {
         }
         socket.emit('message', data, res.data.data._id);
   }
-  socket.on('message', (message) => {
-    const newMessage = {
-      id: message.id,
-      content: message.content,
-      sent: message.senderId,
-      senderName: message.senderName,
-      avatarSender: message.avatarSender,
-      isForwarded: true,
-      time: message.time,
-      type: message.type,
-      media: message.media,
-    }
-    // console.log('newmessage', newMessage);
-    setMessages([...messages, newMessage]);
-  });
   setForwarded([...forwarded, index]);
 };
 useEffect(() => {

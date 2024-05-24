@@ -317,6 +317,8 @@ const handleAddFriend = async () => {
                         src={
                           userInfo.avatar
                             ? userInfo.avatar
+                            : userInfo.photoURL 
+                            ? userInfo.photoURL
                             : "https://i.imgur.com/rsJjBcH.png"
                         }
                         alt="Avatar"

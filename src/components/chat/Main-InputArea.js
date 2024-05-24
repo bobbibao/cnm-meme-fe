@@ -73,6 +73,7 @@ const InputArea = (chatRoomId) => {
                         // data.reply =  replyMessage.messageId
                         data.reply =  replyMessage.messageContent
                     }
+                    data.createAt = new Date();
                     socket.emit('message', data, mediaData._id);
                 });
             }
@@ -83,6 +84,7 @@ const InputArea = (chatRoomId) => {
                 chatRoomId: chatRoomId.id,
                 senderId: localStorage.getItem('userId'),
                 content: content,
+                createAt: new Date()
             };
             if (showReplyMessage) {
                 // data.reply =  replyMessage.messageId
