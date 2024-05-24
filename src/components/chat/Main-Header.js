@@ -102,10 +102,23 @@ const Header = (id) => {
   // //         setMeetingId(meetingId);
   // //     });
   // // }}, []);
-  const handleSetAdmin = async (id) => {
+  const handleSetAdmin = async (id, groupId) => {
     // console.log(id);
-    const res = await axiosClient.post("/groups/" + id.id + "/delete-member", {
+    await axiosClient.post("/grant-permission", {
       userId: id,
+      groupId: groupId,
+      role: 'admin'
+    });
+    // console.log(res);
+    //reload page:
+    window.location.reload();
+  };
+  const handleSetMember = async (id, groupId) => {
+    // console.log(id);
+    await axiosClient.post("/grant-permission", {
+      userId: id,
+      groupId: groupId,
+      role: 'member'
     });
     // console.log(res);
     //reload page:
@@ -439,16 +452,28 @@ const handleAddFriend = async () => {
                                         >
                                           kick
                                         </Button>
-                                        <Button
-                                          variant="primary"
-                                          onClick={() =>
-                                            handleSetAdmin(member.id)
-                                          }
-                                          className="font-weight-bold text-uppercase px-3 me-2 text-white"
-                                          style={{ fontSize: "10px" }}
+                                        {!member.roles.includes("admin")
+                                        ? (<Button
+                                        variant="primary"
+                                        onClick={() =>
+                                          handleSetAdmin(member.id, user._id)
+                                        }
+                                        className="font-weight-bold text-uppercase px-3 me-2 text-white"
+                                        style={{ fontSize: "10px" }}
                                         >
-                                          set admin
-                                        </Button>
+                                          Đặt quản trị viên
+                                        </Button>)
+                                        : (<Button
+                                        variant="info"
+                                        onClick={() =>
+                                          handleSetMember(member.id,  user._id)
+                                        }
+                                        className="font-weight-bold text-uppercase px-3 me-2 text-white"
+                                        style={{ fontSize: "10px" }}
+                                        >
+                                          Đặt thành viên
+                                        </Button>)
+                                        }
                                       </div>
                                     )}
                                 </Col>
