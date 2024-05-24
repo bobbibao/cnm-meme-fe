@@ -15,6 +15,7 @@ const Header = (id) => {
   const [user, setUser] = useState({});
   const [meetingId, setMeetingId] = useState();
   const [isFriend, setIsFriend] = useState(true); // Giả sử ban đầu là bạn bè
+  const [sentRequest, setSentRequest] = useState(false); // Giả sử ban đầu là chưa gửi yêu cầu
     const [isMember, setIsMember] = useState(false);
 
   const navigate = useNavigate();
@@ -22,7 +23,13 @@ const Header = (id) => {
   useEffect(() => {
     axiosClient.get("/info-user/" + id.id).then((res) => {
       const data = res.data.data;
-      // console.log("data group: ", data);
+      console.log("data group: ", data);
+      if (data.members) {
+        setIsMember(data.members.includes(JSON.parse(localStorage.getItem("userId"))));
+      }else{
+        setIsFriend(data.friends?.includes(JSON.parse(localStorage.getItem("userId"))));
+        setSentRequest(data.friendsRequest?.includes(JSON.parse(localStorage.getItem("userId"))));
+      }
       setUser(data);
     });
   }, [id.id]);
@@ -138,11 +145,15 @@ const handleUnfriend = async (friendId) => {
 };
 
 const handleAddFriend = async () => {
-  const res = await axiosClient.post("/add-friend", { userInfo });
-  // console.log(res);
+  console.log(userInfo);
+  const res = await axiosClient.post("/add-friend", {
+    userInfo: {
+      _id: user._id,
+    }
+   });
+  console.log(res);
   console.log("add friend");
-  setIsFriend(true); // Đặt trạng thái là true khi thêm bạn bè mới
- // window.location.reload();
+  setSentRequest(true);
 };
 
 
@@ -224,7 +235,8 @@ const handleAddFriend = async () => {
         </Stack>
       </div>
 
-      {!isFriend && (
+      {!isFriend && !user.members && (
+      <div className="position-relative w-100">
         <div
           style={{
             display: "flex",
@@ -233,7 +245,12 @@ const handleAddFriend = async () => {
             border: "1px solid #ddd",
             borderRadius: "8px",
             boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            marginTop: "16px",
+            marginTop: "1px",
+            marginLeft: "8px",
+            position: "absolute",
+            width: "calc(100% - 16px)",
+            backgroundColor: "#fff",
+            zIndex: 1,
           }}
         >
           <Image
@@ -251,10 +268,13 @@ const handleAddFriend = async () => {
               padding: "6px 12px",
               fontSize: "14px",
             }}
+            disabled={sentRequest}
           >
-            Kết bạn
+            {sentRequest ? "Đã gửi" : "Kết bạn"}
           </Button>
         </div>
+      </div>
+
       )}
       <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
@@ -288,17 +308,22 @@ const handleAddFriend = async () => {
                       <div className="d-flex flex-column justify-content-between  align-items-center">
                         <h5>{userInfo.name}</h5>
                         <Button
-                          variant="danger"
+                          variant={userInfo.members || isFriend? 'danger': 'primary'}
+                          disabled={sentRequest && !userInfo.members}
                           className="my-2"
                           onClick={() => {
-                            if (!userInfo.members) {
-                              handleUnfriend(user._id);
-                            } else if (userInfo.isGroup) {
+                            if(userInfo.members){
                               handleOutgroup();
+                            }
+                            else if (!isFriend && !sentRequest) {
+                              handleAddFriend();
+                            }
+                            else if (isFriend) {
+                              handleUnfriend(user._id);
                             }
                           }}
                         >
-                          {!userInfo.members ? "Unfriend" : "Leave group"}
+                          {!userInfo.members  ?  isFriend? "Huỷ kết bản": sentRequest? "Đã gửi": "Kết bạn" : "Rời nhóm"}
                         </Button>
                         {/* {console.log(
                           user,
@@ -335,10 +360,6 @@ const handleAddFriend = async () => {
                             <Col sm="8" className="mb-3">
                               <h6>Dob</h6>
                               <p className="text-muted">{userInfo.dob}</p>
-                            </Col>
-                            <Col sm="4" className="mb-3">
-                              <h6>Gender</h6>
-                              <p className="text-muted">{userInfo.gender}</p>
                             </Col>
                           </Row>
 

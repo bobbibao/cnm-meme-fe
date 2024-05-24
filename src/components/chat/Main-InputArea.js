@@ -26,8 +26,8 @@ const InputArea = (chatRoomId) => {
       }, [replyMessage]); // Sử dụng sessionData trong dependency array để đảm bảo useEffect được gọi lại khi sessionData thay đổi
 
     const handleHideReplyMessage = () => {
-    setShowReplyMessage(false);
-    setReplyMessage(''); // Đặt lại nội dung tin nhắn trả lời
+        setShowReplyMessage(false);
+        setReplyMessage(''); // Đặt lại nội dung tin nhắn trả lời
     };
 
     const handleSubmit = async () => {
@@ -91,8 +91,7 @@ const InputArea = (chatRoomId) => {
             const res = await axiosClient.post(`/send-message`, { data });
             if(res.status === 200) {
                 setMessage('');
-                if(showReplyMessage)
-                    handleHideReplyMessage()
+                if(showReplyMessage)  handleHideReplyMessage();
             }
             socket.emit('message', data, res.data.data._id);
         }
