@@ -449,7 +449,7 @@ const handleReplyMessage = (messageId, messageContent, messageType) => {
                             // message.media && <Image src={message.media.url} style={{ width: '100px', height: '100px' }} />
                             <div>
                               {/* Component nhảy tới tin nhắn được reply  */}
-                              {message.reply?.length > 0 &&
+                              {message.reply.length > 0 &&
                               <Button variant="outline-secondary" onClick={() =>
                               // setScrollToMessageId(message.reply)
                               handleScrollToReply(message.reply)

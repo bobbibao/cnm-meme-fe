@@ -308,18 +308,17 @@ const handleAddFriend = async () => {
                       <div className="d-flex flex-column justify-content-between  align-items-center">
                         <h5>{userInfo.name}</h5>
                         <Button
-                          variant={userInfo.members || isFriend? 'danger': 'primary'}
-                          disabled={sentRequest && !userInfo.members}
+                          variant={isFriend? 'danger': 'primary'}
+                          disabled={sentRequest}
                           className="my-2"
                           onClick={() => {
-                            if(userInfo.members){
-                              handleOutgroup();
-                            }
-                            else if (!isFriend && !sentRequest) {
+                            if (!isFriend) {
                               handleAddFriend();
                             }
-                            else if (isFriend) {
+                            else if (!userInfo.members) {
                               handleUnfriend(user._id);
+                            } else if (userInfo.isGroup) {
+                              handleOutgroup();
                             }
                           }}
                         >
