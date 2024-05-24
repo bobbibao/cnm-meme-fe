@@ -22,7 +22,7 @@ const Header = (id) => {
   useEffect(() => {
     axiosClient.get("/info-user/" + id.id).then((res) => {
       const data = res.data.data;
-      console.log("data group: ", data);
+      // console.log("data group: ", data);
       setUser(data);
     });
   }, [id.id]);
@@ -64,11 +64,11 @@ const Header = (id) => {
   const handleModal = async () => {
     const res = await axiosClient.get("/profile/" + user._id);
     setUserInfo(res.data.data);
-    console.log("userInfo", userInfo);
+    // console.log("userInfo", userInfo);
     setShow(true);
   };
   const handleModalGroup = async (groupId) => {
-    console.log("groupId", groupId);
+    // console.log("groupId", groupId);
     const res = await axiosClient.get("/profile-group/" + groupId);
     setUserInfo(res.data.data);
     setShow(true);
@@ -76,9 +76,9 @@ const Header = (id) => {
   const handleClose = () => setShow(false);
   const handleClose2 = () => setShow2(false);
   const handleBt = async (groupId) => {
-    console.log(groupId);
+    // console.log(groupId);
     const res = await axiosClient.delete("/delete-group/" + groupId);
-    console.log(res);
+    // console.log(res);
   };
   // useEffect(() => {
   // // if(!meetingId){
@@ -90,11 +90,11 @@ const Header = (id) => {
   // //     });
   // // }}, []);
   const handleSetAdmin = async (id) => {
-    console.log(id);
+    // console.log(id);
     const res = await axiosClient.post("/groups/" + id.id + "/delete-member", {
       userId: id,
     });
-    console.log(res);
+    // console.log(res);
     //reload page:
     window.location.reload();
   };
@@ -102,14 +102,14 @@ const Header = (id) => {
     const res = await axiosClient.post("/groups/" + id.id + "/delete-member", {
       userId: userId,
     });
-    console.log(res);
+    // console.log(res);
     window.location.reload();
   };
   const handleAddMember = async () => {
     const res = await axiosClient.get("/info-add-member/" + user._id);
-    console.log(res);
+    // console.log(res);
     setUserInfo2(res.data);
-    console.log(userInfo2);
+    // console.log(userInfo2);
     setShow2(true);
   };
   const [forwarded, setForwarded] = useState([]);
@@ -118,28 +118,28 @@ const Header = (id) => {
     const res = await axiosClient.post("/groups/" + id.id + "/add-member", {
       userId: user._id,
     });
-    console.log(res);
+    // console.log(res);
     setForwarded([...forwarded, index]);
   };
 
   const handleOutgroup = async () => {
     const res = await axiosClient.post("/groups/" + id.id + "/outGroup");
-    console.log(res);
+    // console.log(res);
     navigate("/chat");
     window.location.reload();
   };
 const handleUnfriend = async (friendId) => {
   const res = await axiosClient.post("/unfriend", { friendId });
-  console.log(res);
+  // console.log(res);
   setIsFriend(false); // Đặt trạng thái là false khi bạn bè bị hủy
   //window.location.reload();
-  console.log(res);
+  // console.log(res);
   console.log("unfriend");
 };
 
 const handleAddFriend = async () => {
   const res = await axiosClient.post("/add-friend", { userInfo });
-  console.log(res);
+  // console.log(res);
   console.log("add friend");
   setIsFriend(true); // Đặt trạng thái là true khi thêm bạn bè mới
  // window.location.reload();
@@ -300,10 +300,10 @@ const handleAddFriend = async () => {
                         >
                           {!userInfo.members ? "Unfriend" : "Leave group"}
                         </Button>
-                        {console.log(
+                        {/* {console.log(
                           user,
                           JSON.parse(localStorage.getItem("userId"))
-                        )}
+                        )} */}
                         <Button variant="" className="my-2" onClick={() => handleBt(user._id)}>
                           {!userInfo.members
                             ? "Block"

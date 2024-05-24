@@ -51,7 +51,7 @@ const SideBar = () => {
       newPassword: "",
       confirmNewPassword: "",
     });
-  
+
     const handleShowModal = () => setShowModal(true);
     const handleCloseModal = () => setShowModal(false);
      const navigate = useNavigate();
@@ -63,7 +63,7 @@ const SideBar = () => {
         const fetchUserInfo = async () => {
             try {
                 const res = await axiosClient.get("/profile");
-                console.log(res.data);
+                // console.log(res.data);
                 setUserInfo(res.data.data);
                 setUserInfoUpdate(res.data.data);
             } catch (error) {
@@ -84,17 +84,17 @@ const SideBar = () => {
     const handleChange = (e) => {
       const { name, value } = e.target;
       let updatedValue = value;
-    
+
       if (name === 'dob') {
         updatedValue = value.split("-").reverse().join("-");
       }
-    
+
       setUserInfoUpdate(prevState => ({
         ...prevState,
         [name]: updatedValue
       }));
     };
-    
+
     const handleImageChange = (event) => {
       if (event.target.files && event.target.files[0]) {
         setFile(event.target.files[0]);
@@ -115,7 +115,7 @@ const SideBar = () => {
     };
     const handleSubmit = async (e) => {
       e.preventDefault();
-  
+
       // Check if new password and confirm new password match
       if (passwords.newPassword !== passwords.confirmNewPassword) {
         alert("Mật khẩu mới và nhập lại mật khẩu phải giống nhau");
@@ -130,7 +130,7 @@ const SideBar = () => {
         newPassword: passwords.newPassword
       };
       try {
-        
+
         const response = await axios.post(
           `${process.env.REACT_APP_API_URL}/api/user/change-password`,
           data,
@@ -152,7 +152,7 @@ const SideBar = () => {
         console.error("Error changing password:", error);
       }
     };
-  
+
     const handleDoneClick = async () => {
       if(!file && userInfoUpdate.name === userInfo.name && userInfoUpdate.phone === userInfo.phone && userInfoUpdate.dob === userInfo.dob) {
         alert('Nothing to update');
@@ -197,14 +197,14 @@ const SideBar = () => {
       if(userInfoUpdate.name !== userInfo.name || userInfoUpdate.phone !== userInfo.phone || userInfoUpdate.dob !== userInfo.dob) {
         console.log('Updating profile: ', userInfoUpdate);
         const response = await axiosClient.post('/profile', userInfoUpdate);
-        
+
         if (response.status === 200) {
           alert('Profile updated successfully');
           console.log("Updated UserInfo:", userInfo);
           setIsEditing(false);
           setFile(null);
           const res = await axiosClient.get("/profile");
-          console.log(res.data);
+          // console.log(res.data);
           setUserInfo(res.data.data);
           setUserInfoUpdate(res.data.data);
         }else {
@@ -214,7 +214,7 @@ const SideBar = () => {
           setFile(null);
           setUserInfoUpdate(userInfo);
         }
-      } 
+      }
     }
     const handleChangePass = (e) => {
       const { name, value } = e.target;
@@ -231,7 +231,7 @@ const SideBar = () => {
       }
     }
     const triggerFileSelectPopup = () => fileInputRef.current.click();
-    
+
         return (
           <>
             <SideBarStyled>
@@ -384,7 +384,7 @@ const SideBar = () => {
                               </Button>
                               </>)
                 }
-                    
+
                 </div>
               </Col>
               <Col md="8">
@@ -419,7 +419,7 @@ const SideBar = () => {
                       <h6>Gender</h6>
                       <p className="text-muted">{userInfo.gender}</p>
                     </Col>
-                    
+
                   </Row>
 
                   <div className="d-flex justify-content-start">
@@ -451,7 +451,7 @@ const SideBar = () => {
 
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formcurrentPassword">
-              
+
               <Form.Label>Current Password:</Form.Label>
               <br />
               <br />
@@ -464,7 +464,7 @@ const SideBar = () => {
               />
             </Form.Group>
             <br />
-         
+
             <Form.Group controlId="formNewPassword">
               <Form.Label>New Password:</Form.Label>
               <br />

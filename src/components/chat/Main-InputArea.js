@@ -34,8 +34,8 @@ const InputArea = (chatRoomId) => {
         if (isSubmitting) return;
         setIsSubmitting(true);
         const content = message;
-        console.log(content);
-        console.log(showReplyMessage);
+        // console.log(content);
+        // console.log(showReplyMessage);
         if(files.length > 0) {
             const formData = new FormData();
             files.forEach((file) => {
@@ -48,14 +48,14 @@ const InputArea = (chatRoomId) => {
             if (showReplyMessage) {
                 formData.append('reply', replyMessage.messageId);
             }
-            console.log("this is form media", formData.getAll('media'));
+            // console.log("this is form media", formData.getAll('media'));
             const res = await axios.post(process.env.REACT_APP_API_URL+'/api/send-media', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': Cookies.get('authToken')
                 }
             });
-            console.log(res);
+            // console.log(res);
             if(res.status === 200) {
                 setPreviews([]);
                 setFiles([]);

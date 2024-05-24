@@ -43,8 +43,8 @@ const SearchBar = () => {
         if (res.status === 200) {
           const userData = res.data.data;
           setUserInfo(userData);
-          console.log("userData", userData);
-          console.log("userInfo", userInfo);
+          // console.log("userData", userData);
+          // console.log("userInfo", userInfo);
           if (userData.isFriend) setIsFriend(true);
           else if (userData.sent) setSent(true);
           else {
@@ -62,7 +62,7 @@ const SearchBar = () => {
     const res = await axiosClient.post("/add-friend", { userInfo });
     if (res.status === 200) {
       console.log("Add friend success");
-      console.log(res);
+      // console.log(res);
       setSent(true);
     }
   };
@@ -76,7 +76,7 @@ const SearchBar = () => {
   const triggerFileSelectPopup = () => fileInputRef.current.click();
 
   const handleAvatarChange = (event) => {
-    console.log(event.target.files);
+    // console.log(event.target.files);
 
     if (event.target.files && event.target.files.length > 0) {
       const newFile = event.target.files[0];
@@ -91,7 +91,7 @@ const SearchBar = () => {
   const handleSubmitGroup = async (event) => {
     event.preventDefault();
     const data= new FormData();
-    console.log(checkedUserId);
+    // console.log(checkedUserId);
     data.append("members", JSON.stringify(checkedUserId))
     // checkedUserId.map((id) => {
     //   data.append("members",id);
@@ -105,8 +105,8 @@ const SearchBar = () => {
     //   members: memberDatas,
     //   photo:previewAvatarGroup
     // };
-   console.log(data);
-   console.log(previewAvatarGroup);
+  //  console.log(data);
+  //  console.log(previewAvatarGroup);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/creategroup`,
@@ -354,7 +354,7 @@ const SearchBar = () => {
                     {/* Mapping through isFriend array if it's an array */}
                     {Array.isArray(isFriend) &&
                       isFriend.map((friend, index) => {
-                        console.log(friend);
+                        // console.log(friend);
                         return (
                           <FriendItem
                             friend={friend}

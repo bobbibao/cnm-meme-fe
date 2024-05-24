@@ -19,7 +19,7 @@ function SenderView({ webcamStream, micRef, webcamOn, isLocal }) {
       return mediaStream;
     }
   }, [webcamStream, webcamOn]);
-  
+
   return (
     (!isLocal) ?
     <div style={{ position: "", width: "80%", height: "60%", margin: "20px" }}>
@@ -45,7 +45,7 @@ function SenderView({ webcamStream, micRef, webcamOn, isLocal }) {
         </Col>
       </Row>
     </div>
-    : 
+    :
     <Row>
       <Col>
         <div style={{ flex:0, position: "fixed", width: "300px", height: "auto", bottom: "10px", right: "10px", zIndex: '999',  borderRadius: "20px", overflow: "hidden"  }}>
@@ -69,16 +69,16 @@ function SenderView({ webcamStream, micRef, webcamOn, isLocal }) {
 
   );
   }
-  
+
   function ReceiverView({ micStream, micOn, isLocal, displayName }) {
   const micRef = useRef(null);
-  
+
   useEffect(() => {
     if (micRef.current) {
       if (micOn && micStream) {
         const mediaStream = new MediaStream();
         mediaStream.addTrack(micStream.track);
-  
+
         micRef.current.srcObject = mediaStream;
         micRef.current
           .play()
@@ -90,7 +90,7 @@ function SenderView({ webcamStream, micRef, webcamOn, isLocal }) {
       }
     }
   }, [micStream, micOn]);
-  
+
   return (
     <div style={{ }}>
       <Row>
@@ -104,7 +104,7 @@ function SenderView({ webcamStream, micRef, webcamOn, isLocal }) {
     </div>
   );
   }
-  
+
   function ParticipantView(props) {
   const micRef = useRef(null);
   const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
@@ -152,7 +152,7 @@ function SenderView({ webcamStream, micRef, webcamOn, isLocal }) {
       )}</>
   );
   }
-  
+
 
 function Controls() {
   const { leave, toggleMic, toggleWebcam, startHls, stopHls } = useMeeting();
@@ -204,7 +204,7 @@ function Container(props) {
       setJoined(null);
     },
   });
-  
+
   socket.on("accept meeting", (data) => {
     setJoined("JOINING");
     join();

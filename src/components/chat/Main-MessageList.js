@@ -39,7 +39,7 @@ const MessageList = (id) => {
         try {
           if (id.id) {
             const res = await axiosClient.get(`/messages/${id.id}`);
-            console.log("messages123123123: ", res.data.data)
+            // console.log("messages123123123: ", res.data.data)
             if (res.data.data || res.status === 200)
             {
 
@@ -208,17 +208,17 @@ const handleForward = async (messageId) => {
       },
     });
     setUserInfo(res.data.data);
-    console.log(userInfo);
+    // console.log(userInfo);
     setShow(true);
 }
 const handleSendForward = async (index, idChatRoom) => {
-  console.log('forward message', messageId, idChatRoom);
+  // console.log('forward message', messageId, idChatRoom);
   const res = await axiosClient.patch(`/forward-message/${messageId}`, {
     data: {
       chatRoomId: idChatRoom,
     },
   });
-  console.log('res', res);
+  // console.log('res', res);
   if (res.status === 200){
         const data = {
             chatRoomId: idChatRoom,
@@ -241,14 +241,14 @@ const handleSendForward = async (index, idChatRoom) => {
       type: message.type,
       media: message.media,
     }
-    console.log('newmessage', newMessage);
+    // console.log('newmessage', newMessage);
     setMessages([...messages, newMessage]);
   });
   setForwarded([...forwarded, index]);
 };
 useEffect(() => {
   socket.on('unsend message', (a) => {
-    console.log('unsend message', a);
+    // console.log('unsend message', a);
     setMessages(messages.map(message => message.id === a.id ? { ...message, unsent: true } : message));
   });
 }, [messages]);
@@ -259,14 +259,14 @@ const handleReaction = async (reaction, messageId) => {
       reaction,
     },
   });
-  console.log('resasdasd', res.data.data.reactions);
+  // console.log('resasdasd', res.data.data.reactions);
   if (res.status === 200){
     socket.emit('react message', { chatRoomId: id.id, messageId, reactions: res.data.data.reactions });
   }
 };
 useEffect(() => {
   socket.on('react message', (message) => {
-    console.log('react message', message);
+    // console.log('react message', message);
     setMessages(messages.map(m => m.id === message.messageId ? { ...m, reactions: message.reactions } : m));
   });
 }, [messages]);

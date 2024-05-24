@@ -43,8 +43,8 @@ const SearchBar = () => {
         if (res.status === 200) {
           const userData = res.data.data;
           setUserInfo(userData);
-          console.log("userData", userData);
-          console.log("userInfo", userInfo);
+          // console.log("userData", userData);
+          // console.log("userInfo", userInfo);
           if (userData.isFriend) setIsFriend(true);
           else if (userData.sent) setSent(true);
           else {
@@ -75,7 +75,7 @@ const SearchBar = () => {
   const triggerFileSelectPopup = () => fileInputRef.current.click();
 
   const handleAvatarChange = (event) => {
-    console.log(event.target.files);
+    // console.log(event.target.files);
 
     if (event.target.files && event.target.files.length > 0) {
       const newFiles = event.target.files[0];
@@ -86,7 +86,7 @@ const SearchBar = () => {
 
   const handleChangeGroupName = (event) => {
     setGroupName(event.target.value);
-    console.log(groupName);
+    // console.log(groupName);
   };
 
   const handleSubmitGroup = async (event) => {
@@ -104,7 +104,7 @@ const SearchBar = () => {
       //         'Authorization': Cookies.get('authToken')
       //     }
       // });
-      console.log(formData.get("groupAvatar"));
+      // console.log(formData.get("groupAvatar"));
     }
   };
 
@@ -319,7 +319,7 @@ const SearchBar = () => {
                         onCheck={handleFriendItemCheck}
                       />
                     ))}
-                   
+
                   </StyledListGroup>
                 </Col>
                 {/* Tạm tắt feature này để update sau  */}

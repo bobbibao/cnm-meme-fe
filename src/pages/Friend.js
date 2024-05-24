@@ -13,7 +13,7 @@ const FriendList = () => {
     useEffect(() => {
         const fetchData = async () => {
             const res = await axiosClient.get("/getAllFriend");
-            console.log(res.data);
+            // console.log(res.data);
             setFriends(res.data);
         }
         fetchData();
@@ -22,7 +22,7 @@ const FriendList = () => {
     const handleUnfriend = async (friendId) => {
         try {
             const res = await axiosClient.post("/unfriend", { friendId });
-            console.log(res.data);
+            // console.log(res.data);
             const updatedFriends = friends.filter((friend) => friend._id !== friendId);
             setFriends(updatedFriends);
         } catch (error) {
