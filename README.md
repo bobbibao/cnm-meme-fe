@@ -1,5 +1,9 @@
 # MeMe_ChatApp_FrontEnd
 
+- BackEnd:   https://github.com/bobbibao/cnm-meme-be.git (Demo web and mobile)
+- FrontEnd:  https://github.com/bobbibao/cnm-meme-fe.git
+- Mobile:    https://github.com/bobbibao/cnm-meme-app.git
+
 ## Author
 - [Kiều Thị Thuỳ Dương (Fullstack Web-App)]()
 - [Trần Văn Bảo (Fullstack]()
@@ -10,16 +14,6 @@
 
 ## Description
 - MeMe ChatApp FrontEnd is a client application developed using ReactJS, Bootstrap, and other technologies. It provides a user-friendly interface for chatting with other users.
-
-## Acknowledgments
-- ...
-
-## Reference
-- ...
-
-## Demo
-- [View Demo](link_to_demo)
-
 
 ### 1. Requirement 
 - react: 17.0.2
@@ -74,8 +68,10 @@ MEME_FrontEnd
 - Realtime chat
 - Edit profile
 - Change password
-- Logout
+- Logout4
 - Responsive
 
 ### Contact
 - [..](..)
+
+### Demo
