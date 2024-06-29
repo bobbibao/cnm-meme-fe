@@ -89,7 +89,7 @@ const Chat = () => {
     setShowMeeting(false);
   };
   const handleConfirm = () => {
-    console.log(data);
+    // console.log(data);
     socket.emit('accept meeting', { meetingId: data.meetingId, userId: user._id});
     window.open('/meeting2/' + data.meetingId, '_blank');
     setShowMeeting(false);
@@ -98,7 +98,7 @@ const Chat = () => {
     if (!id) return;
     axiosClient.get("/info-user/" + id).then((res) => {
         const data = res.data.data;
-        console.log("data", data);
+        // console.log("data", data);
         setUser(data);
     });
 }, [id]);

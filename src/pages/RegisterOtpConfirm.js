@@ -42,7 +42,7 @@ const RegisterOtpConfirm = () => {
         otp,
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         alert("Đăng kí tài khoản thành công");
         setTimeout(() => {
           navigate(route.chat);

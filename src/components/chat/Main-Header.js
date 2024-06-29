@@ -5,7 +5,6 @@ import { icons } from "../../assets";
 import styled from "styled-components";
 import axiosClient from "../../api/axiosClient";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineUser } from 'react-icons/ai'; // Import user icon
 
 
 import Modal from 'react-bootstrap/Modal';
@@ -16,7 +15,9 @@ const Header = (id) => {
   const [user, setUser] = useState({});
   const [meetingId, setMeetingId] = useState();
   const [isFriend, setIsFriend] = useState(true); // Giả sử ban đầu là bạn bè
-    const [isMember, setIsMember] = useState(false);
+  const [sentRequest, setSentRequest] = useState(false); // Giả sử ban đầu là chưa gửi yêu 
+  const [receivedRequest, setReceivedRequest] = useState(false); // Giả sử ban đầu là chưa nhận yêu cầu
+  const [isMember, setIsMember] = useState(false);
 
   const navigate = useNavigate();
   var socket = id.socket;
@@ -24,6 +25,14 @@ const Header = (id) => {
     axiosClient.get("/info-user/" + id.id).then((res) => {
       const data = res.data.data;
       console.log("data group: ", data);
+      if (data.members) {
+        setIsMember(data.members.includes(JSON.parse(localStorage.getItem("userId"))));
+      }else{
+        setIsFriend(data.friends?.includes(JSON.parse(localStorage.getItem("userId"))));
+        setSentRequest(data.friendsRequest?.includes(JSON.parse(localStorage.getItem("userId"))));
+        setReceivedRequest(data.requestsSent?.includes(JSON.parse(localStorage.getItem("userId"))));
+        console.log("data user: ", data.requestsSent?.includes(JSON.parse(localStorage.getItem("userId"))));
+      }
       setUser(data);
     });
   }, [id.id]);
@@ -65,18 +74,25 @@ const Header = (id) => {
   const handleModal = async () => {
     const res = await axiosClient.get("/profile/" + user._id);
     setUserInfo(res.data.data);
-    console.log("userInfo", userInfo);
+    // console.log("userInfo", userInfo);
     setShow(true);
   };
   const handleModalGroup = async (groupId) => {
-    console.log("groupId", groupId);
+    // console.log("groupId", groupId);
     const res = await axiosClient.get("/profile-group/" + groupId);
     setUserInfo(res.data.data);
     setShow(true);
   };
   const handleClose = () => setShow(false);
   const handleClose2 = () => setShow2(false);
-  const handleBt = () => {};
+  const handleBt = async (groupId) => {
+    // console.log(groupId);
+    const res = await axiosClient.delete("/delete-group/" + groupId);
+    console.log(res);
+    if (res.status === 200) {
+      navigate("/chat");
+    }
+  };
   // useEffect(() => {
   // // if(!meetingId){
   // //     setMeetingId("meetingId");
@@ -86,12 +102,25 @@ const Header = (id) => {
   // //         setMeetingId(meetingId);
   // //     });
   // // }}, []);
-  const handleSetAdmin = async (id) => {
-    console.log(id);
-    const res = await axiosClient.post("/groups/" + id.id + "/delete-member", {
+  const handleSetAdmin = async (id, groupId) => {
+    // console.log(id);
+    await axiosClient.post("/grant-permission", {
       userId: id,
+      groupId: groupId,
+      role: 'admin'
     });
-    console.log(res);
+    // console.log(res);
+    //reload page:
+    window.location.reload();
+  };
+  const handleSetMember = async (id, groupId) => {
+    // console.log(id);
+    await axiosClient.post("/grant-permission", {
+      userId: id,
+      groupId: groupId,
+      role: 'member'
+    });
+    // console.log(res);
     //reload page:
     window.location.reload();
   };
@@ -99,14 +128,14 @@ const Header = (id) => {
     const res = await axiosClient.post("/groups/" + id.id + "/delete-member", {
       userId: userId,
     });
-    console.log(res);
+    // console.log(res);
     window.location.reload();
   };
   const handleAddMember = async () => {
     const res = await axiosClient.get("/info-add-member/" + user._id);
-    console.log(res);
+    // console.log(res);
     setUserInfo2(res.data);
-    console.log(userInfo2);
+    // console.log(userInfo2);
     setShow2(true);
   };
   const [forwarded, setForwarded] = useState([]);
@@ -115,30 +144,35 @@ const Header = (id) => {
     const res = await axiosClient.post("/groups/" + id.id + "/add-member", {
       userId: user._id,
     });
-    console.log(res);
+    // console.log(res);
     setForwarded([...forwarded, index]);
   };
 
   const handleOutgroup = async () => {
     const res = await axiosClient.post("/groups/" + id.id + "/outGroup");
-    console.log(res);
+    // console.log(res);
+    navigate("/chat");
     window.location.reload();
   };
 const handleUnfriend = async (friendId) => {
   const res = await axiosClient.post("/unfriend", { friendId });
-  console.log(res);
+  // console.log(res);
   setIsFriend(false); // Đặt trạng thái là false khi bạn bè bị hủy
   //window.location.reload();
-  console.log(res);
+  // console.log(res);
   console.log("unfriend");
 };
 
 const handleAddFriend = async () => {
-  const res = await axiosClient.post("/add-friend", { userInfo });
+  console.log(userInfo);
+  const res = await axiosClient.post("/add-friend", {
+    userInfo: {
+      _id: user._id,
+    }
+   });
   console.log(res);
   console.log("add friend");
-  setIsFriend(true); // Đặt trạng thái là true khi thêm bạn bè mới
- // window.location.reload();
+  setSentRequest(true);
 };
 
 
@@ -195,7 +229,7 @@ const handleAddFriend = async () => {
               style={{ width: "25px", height: "25px" }}
             />
           </div>
-          {/* 
+          {/*
            <div className="p-1 mx-1 image-hover">
              <AiOutlineUser // Sử dụng user icon
                style={{ width: "25px", height: "25px" }}
@@ -220,7 +254,8 @@ const handleAddFriend = async () => {
         </Stack>
       </div>
 
-      {!isFriend && (
+      {!isFriend && !user.members && (
+      <div className="position-relative w-100">
         <div
           style={{
             display: "flex",
@@ -229,7 +264,12 @@ const handleAddFriend = async () => {
             border: "1px solid #ddd",
             borderRadius: "8px",
             boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-            marginTop: "16px",
+            marginTop: "1px",
+            marginLeft: "8px",
+            position: "absolute",
+            width: "calc(100% - 16px)",
+            backgroundColor: "#fff",
+            zIndex: 1,
           }}
         >
           <Image
@@ -247,10 +287,13 @@ const handleAddFriend = async () => {
               padding: "6px 12px",
               fontSize: "14px",
             }}
+            disabled={sentRequest}
           >
-            Kết bạn
+            {sentRequest ? "Đã gửi": receivedRequest? "Đồng ý kết bạn" : "Kết bạn"}
           </Button>
         </div>
+      </div>
+
       )}
       <Modal show={show} onHide={handleClose} size="lg">
         <Modal.Header closeButton>
@@ -274,6 +317,8 @@ const handleAddFriend = async () => {
                         src={
                           userInfo.avatar
                             ? userInfo.avatar
+                            : userInfo.photoURL 
+                            ? userInfo.photoURL
                             : "https://i.imgur.com/rsJjBcH.png"
                         }
                         alt="Avatar"
@@ -284,28 +329,33 @@ const handleAddFriend = async () => {
                       <div className="d-flex flex-column justify-content-between  align-items-center">
                         <h5>{userInfo.name}</h5>
                         <Button
-                          variant="danger"
+                           variant={userInfo.members || isFriend? 'danger': 'primary'}
+                           disabled={sentRequest && !userInfo.members}
                           className="my-2"
                           onClick={() => {
-                            if (isFriend) {
-                              handleUnfriend(user._id);
-                            } else if (userInfo.isGroup) {
+                            if(userInfo.members){
                               handleOutgroup();
+                            }
+                            else if (!isFriend && !sentRequest) {
+                              handleAddFriend();
+                            }
+                            else if (isFriend) {
+                              handleUnfriend(user._id);
                             }
                           }}
                         >
-                          {!userInfo.members ? "Unfriend" : "Leave group"}
+                          {!userInfo.members  ?  isFriend? "Huỷ kết bạn": sentRequest? "Đã gửi": receivedRequest? "Đồng ý kết bạn" : "Kết bạn" : "Rời nhóm"}
                         </Button>
-                        {console.log(
+                        {/* {console.log(
                           user,
                           JSON.parse(localStorage.getItem("userId"))
-                        )}
-                        <Button variant="" className="my-2" onClick={handleBt}>
+                        )} */}
+                        <Button variant="" className="my-2" onClick={() => handleBt(user._id)}>
                           {!userInfo.members
-                            ? "Block"
+                            ? "Beta"
                             : user.ownerId ===
                               JSON.parse(localStorage.getItem("userId"))
-                            ? "Delete group"
+                            ? "Xoá nhóm"
                             : ""}
                         </Button>
                       </div>
@@ -331,10 +381,6 @@ const handleAddFriend = async () => {
                             <Col sm="8" className="mb-3">
                               <h6>Dob</h6>
                               <p className="text-muted">{userInfo.dob}</p>
-                            </Col>
-                            <Col sm="4" className="mb-3">
-                              <h6>Gender</h6>
-                              <p className="text-muted">{userInfo.gender}</p>
                             </Col>
                           </Row>
 
@@ -408,16 +454,28 @@ const handleAddFriend = async () => {
                                         >
                                           kick
                                         </Button>
-                                        <Button
-                                          variant="primary"
-                                          onClick={() =>
-                                            handleSetAdmin(member.id)
-                                          }
-                                          className="font-weight-bold text-uppercase px-3 me-2 text-white"
-                                          style={{ fontSize: "10px" }}
+                                        {!member.roles.includes("admin")
+                                        ? (<Button
+                                        variant="primary"
+                                        onClick={() =>
+                                          handleSetAdmin(member.id, user._id)
+                                        }
+                                        className="font-weight-bold text-uppercase px-3 me-2 text-white"
+                                        style={{ fontSize: "10px" }}
                                         >
-                                          set admin
-                                        </Button>
+                                          Đặt quản trị viên
+                                        </Button>)
+                                        : (<Button
+                                        variant="info"
+                                        onClick={() =>
+                                          handleSetMember(member.id,  user._id)
+                                        }
+                                        className="font-weight-bold text-uppercase px-3 me-2 text-white"
+                                        style={{ fontSize: "10px" }}
+                                        >
+                                          Đặt thành viên
+                                        </Button>)
+                                        }
                                       </div>
                                     )}
                                 </Col>

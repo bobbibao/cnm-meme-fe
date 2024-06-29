@@ -44,7 +44,7 @@ const handleSubmit = async (e) => {
         dateOfBirth,
       }
     );
-    console.log(response);
+    // console.log(response);
     alert("Đăng ký tài khoản thành công");
     setTimeout(() => {
       navigate(route.home);

@@ -17,7 +17,7 @@ const RecallFriendRequest = () => {
   const fetchData = async () => {
     try {
       const res = await axiosClient.get("/getAllCancelFriendRequest");
-      console.log(res.data);
+      // console.log(res.data);
       setFriends(res.data.data); // Assuming the data is nested under 'data' key
     } catch (error) {
       console.error(error);
@@ -30,7 +30,7 @@ const RecallFriendRequest = () => {
       const res = await axiosClient.post("/cancel-friend-request", {
         friendId,
       });
-      console.log(res.data);
+      // console.log(res.data);
       // After cancelling the friend request, refetch the data
       fetchData();
     } catch (error) {
@@ -45,7 +45,7 @@ const RecallFriendRequest = () => {
         <Col md={1} style={{ width: "101px" }}>
           <SideBar />
         </Col>
-        <Col md={10}>
+        <Col md={11}>
           <Button variant="light" onClick={() => navigate(-1)} className="mb-3">
             <ArrowLeft /> Back
           </Button>

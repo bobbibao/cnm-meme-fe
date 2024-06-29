@@ -38,7 +38,7 @@ const LoginForm =() => {
    e.preventDefault();
    try {
      const response = await login({ email, password });
-     console.log(response);
+    //  console.log(response);
      navigate(route.chat);
    } catch (err) {
      if (err.response) {

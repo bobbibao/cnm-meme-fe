@@ -20,7 +20,7 @@ const FormHeaderStyled = styled.h4`
 `;
 
 const SendOtp = () => {
-  
+
 const [email, setEmail] = useState("");
 const navigate = useNavigate();
 const [errorMessage, setErrorMessage] = useState("");
@@ -28,7 +28,7 @@ const [errorMessage, setErrorMessage] = useState("");
 const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    console.log(process.env.REACT_APP_API_URL + "/api/users/send-otp"); 
+    console.log(process.env.REACT_APP_API_URL + "/api/users/send-otp");
     const response = await axios.post(
       process.env.REACT_APP_API_URL + "/api/users/send-otp",
       {
@@ -39,7 +39,7 @@ const handleSubmit = async (e) => {
       setErrorMessage(response.data.message);
     } else {
       sessionStorage.setItem("email", email);
-      console.log(sessionStorage);
+      // console.log(sessionStorage);
       alert("Vui lòng kiểm tra mã xác nhận đã gửi qua email của bạn");
       navigate(route.resetPasswordConfirm);
       setErrorMessage("");

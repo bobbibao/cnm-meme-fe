@@ -16,6 +16,7 @@ const InputArea = (chatRoomId) => {
     const [message, setMessage] = useState(''); // Add this line
     const [showReplyMessage, setShowReplyMessage] = useState(false);
     const [replyMessage, setReplyMessage] = useGlobalState('replyMessage');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         // Chỉ kích hoạt setShowReplyMessage(true) khi replyMessage không rỗng
@@ -25,14 +26,16 @@ const InputArea = (chatRoomId) => {
       }, [replyMessage]); // Sử dụng sessionData trong dependency array để đảm bảo useEffect được gọi lại khi sessionData thay đổi
 
     const handleHideReplyMessage = () => {
-    setShowReplyMessage(false);
-    setReplyMessage(''); // Đặt lại nội dung tin nhắn trả lời
+        setShowReplyMessage(false);
+        setReplyMessage(''); // Đặt lại nội dung tin nhắn trả lời
     };
 
     const handleSubmit = async () => {
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         const content = message;
-        console.log(content);
-        console.log(showReplyMessage);
+        // console.log(content);
+        // console.log(showReplyMessage);
         if(files.length > 0) {
             const formData = new FormData();
             files.forEach((file) => {
@@ -45,14 +48,14 @@ const InputArea = (chatRoomId) => {
             if (showReplyMessage) {
                 formData.append('reply', replyMessage.messageId);
             }
-            console.log("this is form media", formData.getAll('media'));
+            // console.log("this is form media", formData.getAll('media'));
             const res = await axios.post(process.env.REACT_APP_API_URL+'/api/send-media', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': Cookies.get('authToken')
                 }
             });
-            console.log(res);
+            // console.log(res);
             if(res.status === 200) {
                 setPreviews([]);
                 setFiles([]);
@@ -70,6 +73,7 @@ const InputArea = (chatRoomId) => {
                         // data.reply =  replyMessage.messageId
                         data.reply =  replyMessage.messageContent
                     }
+                    data.createAt = new Date();
                     socket.emit('message', data, mediaData._id);
                 });
             }
@@ -80,6 +84,7 @@ const InputArea = (chatRoomId) => {
                 chatRoomId: chatRoomId.id,
                 senderId: localStorage.getItem('userId'),
                 content: content,
+                createAt: new Date()
             };
             if (showReplyMessage) {
                 // data.reply =  replyMessage.messageId
@@ -88,10 +93,11 @@ const InputArea = (chatRoomId) => {
             const res = await axiosClient.post(`/send-message`, { data });
             if(res.status === 200) {
                 setMessage('');
-                handleHideReplyMessage()
+                if(showReplyMessage)  handleHideReplyMessage();
             }
             socket.emit('message', data, res.data.data._id);
         }
+        setTimeout(() => setIsSubmitting(false), 1000);
     };
 
     const triggerFileSelectPopup = () => fileInputRef.current.click();

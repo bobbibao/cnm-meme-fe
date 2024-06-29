@@ -39,7 +39,7 @@ const MessageList = (id) => {
         try {
           if (id.id) {
             const res = await axiosClient.get(`/messages/${id.id}`);
-            console.log("messages123123123: ", res.data.data)
+            // console.log("messages123123123: ", res.data.data)
             if (res.data.data || res.status === 200)
             {
 
@@ -208,17 +208,17 @@ const handleForward = async (messageId) => {
       },
     });
     setUserInfo(res.data.data);
-    console.log(userInfo);
+    // console.log(userInfo);
     setShow(true);
 }
 const handleSendForward = async (index, idChatRoom) => {
-  console.log('forward message', messageId, idChatRoom);
+  // console.log('forward message', messageId, idChatRoom);
   const res = await axiosClient.patch(`/forward-message/${messageId}`, {
     data: {
       chatRoomId: idChatRoom,
     },
   });
-  console.log('res', res);
+  // console.log('res', res);
   if (res.status === 200){
         const data = {
             chatRoomId: idChatRoom,
@@ -229,26 +229,11 @@ const handleSendForward = async (index, idChatRoom) => {
         }
         socket.emit('message', data, res.data.data._id);
   }
-  socket.on('message', (message) => {
-    const newMessage = {
-      id: message.id,
-      content: message.content,
-      sent: message.senderId,
-      senderName: message.senderName,
-      avatarSender: message.avatarSender,
-      isForwarded: true,
-      time: message.time,
-      type: message.type,
-      media: message.media,
-    }
-    console.log('newmessage', newMessage);
-    setMessages([...messages, newMessage]);
-  });
   setForwarded([...forwarded, index]);
 };
 useEffect(() => {
   socket.on('unsend message', (a) => {
-    console.log('unsend message', a);
+    // console.log('unsend message', a);
     setMessages(messages.map(message => message.id === a.id ? { ...message, unsent: true } : message));
   });
 }, [messages]);
@@ -259,14 +244,14 @@ const handleReaction = async (reaction, messageId) => {
       reaction,
     },
   });
-  console.log('resasdasd', res.data.data.reactions);
+  // console.log('resasdasd', res.data.data.reactions);
   if (res.status === 200){
     socket.emit('react message', { chatRoomId: id.id, messageId, reactions: res.data.data.reactions });
   }
 };
 useEffect(() => {
   socket.on('react message', (message) => {
-    console.log('react message', message);
+    // console.log('react message', message);
     setMessages(messages.map(m => m.id === message.messageId ? { ...m, reactions: message.reactions } : m));
   });
 }, [messages]);
@@ -319,17 +304,17 @@ const handleReplyMessage = (messageId, messageContent, messageType) => {
   return (
     <>
       <Container fluid className="message-list-container p-1 h-100">
-        <Row className="m-0">
-        <div>
+        <Row className="m-0 position-relative h-100">
+        <div className="position-absolute z-3">
       {/* Display the first pinned message */}
       {pinnedMessages.length > 0 && !showDropdown && (
         console.log("pinnedMessagessss",pinnedMessages),
         <div className="pin-table">
           <ul className="list-group">
             <li key={pinnedMessages[0].id} className="list-group-item d-flex justify-content-between align-items-center">
-              <div>
+              <div onClick={() => handleScrollToReply(pinnedMessages[0].content)}>
                 <p className="mb-1"><strong>From:</strong> {pinnedMessages[0].senderName}</p>
-                <p className="mb-0"><strong>Message:</strong> {pinnedMessages[0].content}</p>
+                <p className="mb-0"><strong>Message:</strong> {pinnedMessages[0].type === "image" ? "image" : pinnedMessages[0].type === "video" ? "vdieo" :pinnedMessages[0].type === "file" ? "file" :pinnedMessages[0].content}</p>
               </div>
               <Button className="btn btn-outline-danger" onClick={() => handleUnpin(pinnedMessages[0].id)}>Unpin</Button>
               {/* Dropdown for additional pinned messages */}
@@ -344,9 +329,9 @@ const handleReplyMessage = (messageId, messageContent, messageType) => {
                 <Dropdown.Menu style={{ minWidth: '100%', maxWidth: 'none' }}>
                   {pinnedMessages.slice(1).map((message, index) => (
                     <Dropdown.Item key={message.id}>
-                      <div>
+                      <div onClick={() => handleScrollToReply(pinnedMessages[0].content)}>
                         <p className="mb-1"><strong>From:</strong> {message.senderName}</p>
-                        <p className="mb-0"><strong>Message:</strong> {message.content}</p>
+                        <p className="mb-0"><strong>Message:</strong> {message.type === "image" ? "image" : message.type === "video" ? "video" : message.type === "file" ? "file" : message.content}</p>
                       </div>
                       <Button className="btn btn-outline-danger" onClick={() => handleUnpin(message.id)}>Unpin</Button>
                     </Dropdown.Item>
@@ -362,9 +347,9 @@ const handleReplyMessage = (messageId, messageContent, messageType) => {
           <ul className="list-group">
             {pinnedMessages.map((message, index) => (
               <li key={message.id} className="list-group-item d-flex justify-content-between align-items-center">
-                <div>
+                <div onClick={() => handleScrollToReply(pinnedMessages[0].content)}>
                   <p className="mb-1"><strong>From:</strong> {message.senderName}</p>
-                  <p className="mb-0"><strong>Message:</strong> {message.content}</p>
+                  <p className="mb-0"><strong>Message:</strong> {message.type === "image" ? "image" : message.type === "video" ? "video" : message.type === "file" ? "file" : message.content}</p>
                 </div>
                 <Button className="btn btn-outline-danger" onClick={() => handleUnpin(message.id)}>Unpin</Button>
                 <Dropdown drop='up' className="position-absolute" style={{ left: '90%', top: '15px' }}>
@@ -383,8 +368,8 @@ const handleReplyMessage = (messageId, messageContent, messageType) => {
         </div>
       )}
       </div>
-          <Col className="p-0">
-            <StyledListGroup ref={listGroupRef} className="message-container">
+          <Col className="p-0 h-100">
+            <StyledListGroup ref={listGroupRef} className="message-container h-100">
               {messages.length > 0 ? (
                 messages.map((message, index) => (
                   <ListGroup.Item
@@ -449,7 +434,7 @@ const handleReplyMessage = (messageId, messageContent, messageType) => {
                             // message.media && <Image src={message.media.url} style={{ width: '100px', height: '100px' }} />
                             <div>
                               {/* Component nhảy tới tin nhắn được reply  */}
-                              {message.reply!=='' &&
+                              {message.reply?.length > 0 &&
                               <Button variant="outline-secondary" onClick={() =>
                               // setScrollToMessageId(message.reply)
                               handleScrollToReply(message.reply)
@@ -615,11 +600,7 @@ const handleReplyMessage = (messageId, messageContent, messageType) => {
                                       localStorage.getItem("userId")
                                     ) && (
                                     <>
-                                      <Dropdown.Item
-                                      onClick={() => handlePinMessage(message.id)}
-                                      >
-                                        <span>Pin</span>
-                                      </Dropdown.Item>
+                                     
                                       <Dropdown.Item
                                         onClick={() => handleUnsend(message.id)}
                                       >
@@ -627,6 +608,11 @@ const handleReplyMessage = (messageId, messageContent, messageType) => {
                                       </Dropdown.Item>
                                     </>
                                   )}
+                                   <Dropdown.Item
+                                      onClick={() => handlePinMessage(message.id)}
+                                      >
+                                        <span>Pin</span>
+                                      </Dropdown.Item>
                                   <Dropdown.Item
                                     onClick={() => handleDelete(message.id)}
                                   >
